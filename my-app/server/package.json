@@ -12,9 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.3.1",
+    "@langchain/community": "^0.0.43",
+    "@langchain/google-genai": "^0.0.10",
+    "@supabase/supabase-js": "^2.41.1",
     "cors": "^2.8.5",
     "googleapi": "^1.0.2",
     "googleapis": "^134.0.0",
+    "langchain": "^0.1.30",
     "mammoth": "^1.7.1",
     "multer": "^1.4.5-lts.1",
     "pdf2json": "^3.0.5",
