@@ -86,7 +86,7 @@ languages:
       const parsedYaml = response.text();
       try{
           const jsonParsedYaml = JSON.parse(parsedYaml);
-          console.log('json parsed : ', jsonParsedYaml);
+          console.log('json parsed from parsing 1: ', jsonParsedYaml);
       }catch(error)
       {
         console.error('error while parsing to JSON : ' , error);

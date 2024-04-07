@@ -130,4 +130,4 @@ export async function splitJSON(parsedJSON: any) {
         console.error('Error sending to the DB:', error);
     }
 }
-splitJSON(resumeData); //call function
+// splitJSON(resumeData); //call function

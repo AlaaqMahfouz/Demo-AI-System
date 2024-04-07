@@ -82,4 +82,4 @@ function Parse(textToParse) {
     });
 }
 exports.Parse = Parse;
-Parse(textToParse);
+// Parse(textToParse);
