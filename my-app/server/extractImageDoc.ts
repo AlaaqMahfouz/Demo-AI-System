@@ -1,23 +1,20 @@
 // utils/extractImages.ts
 
 import * as mammoth from 'mammoth';
-import * as fs from 'fs-extra';
-import { file } from 'googleapis/build/src/apis/file';
-// import * as puppeteer from 'puppeteer';
-import { ImagesResult } from 'groupdocs-parser-cloud';
+
 
 export default async function extarctDocImages(filePath: string) {
 
     let Buffers:Buffer[]= []
 
-    var options = {
+    var options = {  // configure options for mammoth
         
         convertImage: mammoth.images.imgElement(function(image) {
-            return image.read("base64").then(async function(imageBuffer) {
+            return image.read("base64").then(async function(imageBuffer) {  // get images as base64 buffers
 
-                const ImageBufferObject = Buffer.from(imageBuffer, 'base64');
+                const ImageBufferObject = Buffer.from(imageBuffer, 'base64'); // convert base64 to buffer object
 
-                Buffers.push(ImageBufferObject);
+                Buffers.push(ImageBufferObject); // save buffers to array
                 return {
                     src: "data:" + image.contentType + ";base64," + imageBuffer
                 };
@@ -26,13 +23,6 @@ export default async function extarctDocImages(filePath: string) {
     };
 
     await mammoth.convertToHtml({path: filePath}, options);
-
-    
-
-    // const images: Image[] = Images.value.images.map((image: any) => ({
-    //     src: image.src
-    // }));
-
 
 
     return Buffers;

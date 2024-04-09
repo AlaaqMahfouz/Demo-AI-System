@@ -1,5 +1,4 @@
 import mammoth from "mammoth"
-import Pdfparser from "pdf2json"
 const Tesseract = require('tesseract.js');
 const multer=require('multer')
 const path=require('path')
@@ -8,32 +7,32 @@ const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
 import{ Parse} from './AI-Parsing2T'
-import { PDFDocumentProxy } from 'pdfjs-dist';
 import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
-import { error } from "console";
 const PDFParser=require('pdf2json')
-import * as pdfjs from 'pdfjs-dist';
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 
 
-
+// express cors
 app.use(cors())
 
 
 let fileName =''
+// path of the uploaded file
 let completeFilePath =''
 
 
+// multer config
 const storage =multer.diskStorage({
   destination:(req:any,file:any,cb:any)=>{
-    cb(null,'C:/Users/user/Desktop/My Stuffs/Questa-Pro/AI-Recruitment-SYS/my-app/client/files')
+    cb(null,'../client/files')
   },
   filename: (req:any,file:any,cb:any)=>{
     console.log(file)
+        // Generating Unique name 
         fileName=Date.now() + path.extname(file.originalname);
-        completeFilePath='C:/Users/user/Desktop/My Stuffs/Questa-Pro/AI-Recruitment-SYS/my-app/client/files/' + fileName
+        completeFilePath='../client/files/' + fileName
         cb(null,fileName)
     
     console.log("filepath : " , fileName)
@@ -47,22 +46,20 @@ app.get('/upload',upload.single('CV') ,async (req:any,res:any)=>{
   res.send("image uploaded from get")
 }),
 
-
+// handling request
 app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
 
 
   let file =  req.file;
+  // variable for extracted text
   let finalText='';
   let TextExtracted:string[]
   // let parsedCV :string;
 
-  try {
 
         console.log("file Name" , file )
   
-    } catch (error) {
-      console.error(error);
-    }
+    
     
     if (file) {           
             
@@ -70,11 +67,12 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
           const ImageExtensions = ['png', 'jpg', 'jpeg'];
           const docExtensions = ['doc' , 'docx'];
 
+          // extract extension from file's name
           const extension =  file?.originalname.split('.').pop()?.toLowerCase() || '';
 
           console.log("extesnion is  :" + extension)
-      
-          if( ImageExtensions.includes(extension))
+
+          if( ImageExtensions.includes(extension))  // file is an image
           {
             console.log("this is an image file ");
 
@@ -82,7 +80,7 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
             finalText =await OCR();
 
           }
-          else if(docExtensions.includes(extension))
+          else if(docExtensions.includes(extension))  // file is a doc | docx
           {
 
           
@@ -93,6 +91,8 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
  
               let textDone:string;
 
+              // check if extracted text is empty 
+              // doc is scannned
               if (isEmptyString(finalText)){
 
                 console.log("this is a scanned doc");
@@ -102,18 +102,14 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
                 .then((Buffers)=>{
                   Buffers.forEach(async (Buffer)=>{
                     const Path='Images/FromDocs' + Date.now() +".jpg"; 
-                
+                    // save buffers as images in Path
                     await fs.writeFile(Path , Buffer)
 
+                    // handle extracted images with Tesseract
                     finalText+= await OCR2(Path);
                   })
                 });
 
-               
-
-                // console.log("images extracted" , Images);
-
-                
               }
             }catch(error){
               console.log("couldnt do : ",error);
@@ -123,20 +119,14 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
           
           
       
-          else if(extension=='pdf'){
+          else if(extension=='pdf'){  // file is a pdf
 
             console.log("this is a pdf file ");
-
-
 
             handleAllPdfs()
             .then(async (text)=>{
               finalText=text;
             })
-
-              
-              
-
       
           }
           else{
@@ -153,10 +143,15 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
       setTimeout(async() => {
         
           console.log("final text : " , finalText);
+          // parse text into a template 
         const parsedCV = await Parse(finalText);
         console.log("Parsed text is : ", parsedCV)
-         res.json(parsedCV);
+
+        res.json(parsedCV);
+
+        // empty temperory saved files and images
           await fsExtra.emptyDir('Images');
+          await fsExtra.emptyDir('../client/files')
       }, 20000); // Simulate delay
     });
 
@@ -164,16 +159,16 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
   });
 
 
-export async function docxToHtml(): Promise<string> {
+export async function docxToHtml(): Promise<string> { // handle doc files with mammoth
   const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
   const value = RawTextPromise.value;
   console.log("text : " + value);
   return value;
 }
 
-async function OCR (){
+async function OCR (){  // handle images with tesseract
   try{
-    // console.log("file path from image handler :" , fileName)
+  
     const { data: { text } } = await Tesseract.recognize(completeFilePath, 'eng');
     console.log(text);
 
@@ -184,7 +179,7 @@ async function OCR (){
   }
 }
 
-async function OCR2 (path:string){
+async function OCR2 (path:string){ // handle images with tesseract from a specific path
   try{
     // console.log("file path from image handler :" , fileName)
     const { data: { text } } = await Tesseract.recognize(path, 'eng');
@@ -198,11 +193,9 @@ async function OCR2 (path:string){
 }
 
 
-app.listen(4000);
-console.log("running on port 4000");
 
 
-async function handlePDF():Promise<string>{
+async function handlePDF():Promise<string>{   // handle pdf
 
 
   return new Promise<string> ((resolve , reject)=>{
@@ -212,16 +205,16 @@ async function handlePDF():Promise<string>{
 
   let Text='';
 
-  pdfParser.on('pdfParser_dataError', (errData:any) =>
+  
+  pdfParser.on('pdfParser_dataError', (errData:any) => // handle error while extracting 
     console.log("error" ,errData.parserError),
   
     
   );
 
-  pdfParser.on('pdfParser_dataReady', async (pdfData:any) => {   
+  pdfParser.on('pdfParser_dataReady', async (pdfData:any) => {   // handle data when ready
     
    let Text = (pdfParser).getRawTextContent();
-
 
     resolve(Text);
  
@@ -235,46 +228,42 @@ async function handlePDF():Promise<string>{
 
 }
 
+  
 
-
-async function handleAllPdfs(){
+async function handleAllPdfs(){ // handle scanned/text pdfs
 
   let textDone:string;
   return new Promise<string>(async (resolve,reject)=>{
 
-    await handlePDF()
+     await handlePDF()
     .then(async (text) =>{
                 
 
-                if(text.length<100){
+                if(text.length<100){ // check for scanned pdf
 
                   console.log("this is a scanned pdf");
                   
                   
                   let TextExtracted : string[] = [];
                   
-                  const outputImages = await convert(completeFilePath,{
-                    scale:3,
+                  const outputImages = await convert(completeFilePath,{ // convert pdf to image
+                    scale:3, // specify scale for better image's resolution
                   });
                   
                   const imagePaths = outputImages.map(async(image, i) => {
                     const path = "images/output" + i + ".png";
-                    writeFileSync(path, image);
+                    writeFileSync(path, image); // save images to unique path
                     
                     
-                    
-                    // await page.render(renderContext).promise;
                     return await OCR2(path);
-                    // TextExtracted.push(await OCR2(path));
+                    
                   });
-                  // console.log("all extracted text :", TextExtracted);
+      
                 
                 
                   
-                  await Promise.all(imagePaths)
+                  await Promise.all(imagePaths) // All promises are resolved, 'texts' contains the extracted text from each image
                   .then((texts) => {
-                    // All promises are resolved, 'texts' contains the extracted text from each image
-                    // Save the array 'texts' or do any other processing here
                     
                     // Save the 'texts' array to 'TextExtracted'
                     TextExtracted.push(...texts);
@@ -296,7 +285,7 @@ async function handleAllPdfs(){
                     });
                     
                   }
-                  else{
+                  else{  // pdf is not scanned
                     textDone=text;
                   }
                   
@@ -320,54 +309,6 @@ async function handleAllPdfs(){
             }
 
 
-
-
-            async function extractImagesFromDocx(): Promise<string[]> {
-
-
-              let Paths:string[]=[]
-              try{
-
-                const { messages } = await mammoth.convertToHtml({ path: completeFilePath });
-                                    
-                setTimeout(async() => {
-
-                  if(messages==null)
-                  {
-                    console.warn("extracting data is not done!");
-                  }
-                  else{
-                    
-                  
-                  console.log("messages : " , messages[0]);
-                  
-                messages.forEach((message: any) => {
-                  if (message.part && message.part.contentType.startsWith('image/')) {
-                    const { extension, content } = message.part;
-                    console.log("extension :",extension)
-                    // Write the image content to a file
-                    let path = `output/image${Date.now()}.${extension}`
-                    
-                    fs.writeFileSync(path, content);
-                    Paths.push(path);
-                  }else{
-                    console.log("content is not of type image!");
-                  }
-                });
-                
-                return Paths;
-
-              }
-
-
-              }, 5000);
-                
-              }catch(error)
-              {
-                console.log("Error while extracting images :" , error);
-              }
-
-
-              return Paths;
-
-              }
+              
+app.listen(4000);
+console.log("running on port 4000");
