@@ -36,135 +36,94 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendToSupabase = void 0;
 var supabase_js_1 = require("@supabase/supabase-js");
 // Initialize Supabase client
 var client = (0, supabase_js_1.createClient)("https://oquytlezdjnnavnjwsue.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
 //resume content parsed into a json template through AI-Parsing2.ts
-var resumeData = {
-    "name": "Gebran Elias Nemes",
-    "phoneNumbers": ["+9617777777"],
-    "websites": [],
-    "emails": ["gebrannemes2003@gmail.com"],
-    "dateOfBirth": "4 sept 2003",
-    "addresses": [
-        {
-            "street": "",
-            "city": "Beirut",
-            "state": "",
-            "zip": "",
-            "country": "Lebanon"
-        }
-    ],
-    "summary": "",
-    "education": [
-        {
-            "school": "Collège St. Elie Btina",
-            "degree": "",
-            "fieldOfStudy": "",
-            "startDate": "2006",
-            "endDate": "2021"
-        },
-        {
-            "school": "Lebanese University, Faculty of Science II",
-            "degree": "Bachelor in Computer Science",
-            "fieldOfStudy": "",
-            "startDate": "2021",
-            "endDate": ""
-        }
-    ],
-    "workExperience": [],
-    "projects": [
-        {
-            "projectName": "Front-end website project",
-            "languages": "HTML, CSS, JavaScript",
-            "startDate": "",
-            "endDate": ""
-        },
-        {
-            "projectName": "React-based online marketplace project",
-            "languages": "React, JavaScript, HTML, CSS, Tailwind CSS, Flowbite-React, MySQL",
-            "startDate": "",
-            "endDate": ""
-        },
-        {
-            "projectName": "Android project",
-            "languages": "Android, PhpMyAdmin",
-            "startDate": "",
-            "endDate": ""
-        }
-    ],
-    "skills": [
-        {
-            "skillName": "Problem Solving"
-        },
-        {
-            "skillName": "Attention to Detail"
-        },
-        {
-            "skillName": "Responsibility"
-        },
-        {
-            "skillName": "Team Spirit"
-        },
-        {
-            "skillName": "Sportsmanship"
-        },
-        {
-            "skillName": "Leadership Skills"
-        },
-        {
-            "skillName": "Helping Others"
-        }
-    ],
-    "certifications": [
-        {
-            "certificationName": "Lebanese Civil Defence Certificate"
-        },
-        {
-            "certificationName": "IEEE Clustering Techniques Certificate"
-        }
-    ],
-    "languages": [
-        {
-            "languageName": "Arabic",
-            "proficiency": "Native, Fluent"
-        },
-        {
-            "languageName": "French",
-            "proficiency": "Fluent"
-        },
-        {
-            "languageName": "English",
-            "proficiency": "Fluent"
-        }
-    ]
-};
-//splitting the json 
-function splitJSON(parsedJSON) {
+var resumeData = "{\n  \"name\": \"Jane Joseph Beyrouthy\",\n  \"phoneNumbers\": [\n    {\n      \"phoneNumber\": \"+96176460295\"\n    }\n  ],\n  \"websites\": [],\n  \"emails\": [\n    {\n      \"email\": \"janebeyrouthy@gmail.com\"\n    }\n  ],\n  \"dateOfBirth\": \"\",\n  \"addresses\": [\n    {\n      \"street\": \"\",\n      \"city\": \"Lebanon\",\n      \"state\": \"\",\n      \"zip\": \"\",\n      \"country\": \"\"\n    }\n  ],\n  \"summary\": \"My main objective is to secure an internship where I can learn and grow my skills enabling me to kickstart my career in data science.\",\n  \"education\": [\n    {\n      \"school\": \"Lebanese University Faculty of Sciences Second Branch (ULFS2) \u2013 Fanar\",\n      \"degree\": \"Computer Science\",\n      \"fieldOfStudy\": \"\",\n      \"startDate\": \"2022\",\n      \"endDate\": \"2025\"\n    },\n    {\n      \"school\": \"Lebanese University Faculty of Engineering Second Branch (ULFG2) \u2013 Roumieh\",\n      \"degree\": \"Electrical Engineering\",\n      \"fieldOfStudy\": \"\",\n      \"startDate\": \"2019\",\n      \"endDate\": \"2022\"\n    },\n    {\n      \"school\": \"Lebanese University Faculty of Arts and Architecture (FBAA2) \u2013 Furn el Chebbak\",\n      \"degree\": \"Architecture\",\n      \"fieldOfStudy\": \"\",\n      \"startDate\": \"2018\",\n      \"endDate\": \"2019\"\n    },\n    {\n      \"school\": \"Coll\u00E8ge des S\u0153urs des Saints C\u0153urs \u2013 Ain Saadeh, Ain Najem\",\n      \"degree\": \"French Baccalaureate\",\n      \"fieldOfStudy\": \"Mathematics\",\n      \"startDate\": \"2003\",\n      \"endDate\": \"2018\"\n    }\n  ],\n  \"workExperience\": [],\n  \"projects\": [],\n  \"skills\": [\n    {\n      \"skillName\": \"Object-Oriented Programming\"\n    },\n    {\n      \"skillName\": \"design patterns\"\n    },\n    {\n      \"skillName\": \"database\"\n    },\n    {\n      \"skillName\": \"coding skills\"\n    },\n    {\n      \"skillName\": \"problem-solving skills\"\n    },\n    {\n      \"skillName\": \"C++\"\n    },\n    {\n      \"skillName\": \"Java\"\n    },\n    {\n      \"skillName\": \"Python\"\n    },\n    {\n      \"skillName\": \"HTML\"\n    },\n    {\n      \"skillName\": \"CSS\"\n    },\n    {\n      \"skillName\": \"JavaScript\"\n    },\n    {\n      \"skillName\": \"SQL\"\n    },\n    {\n      \"skillName\": \"Android\"\n    },\n    {\n      \"skillName\": \"React\"\n    },\n    {\n      \"skillName\": \"NodeJs\"\n    },\n    {\n      \"skillName\": \"Slack\"\n    },\n    {\n      \"skillName\": \"Notion\"\n    },\n    {\n      \"skillName\": \"MS Teams\"\n    }\n  ],\n  \"certifications\": [],\n  \"languages\": [\n    {\n      \"languageName\": \"Arabic\",\n      \"proficiency\": \"fluent\"\n    },\n    {\n      \"languageName\": \"French\",\n      \"proficiency\": \"fluent\"\n    },\n    {\n      \"languageName\": \"English\",\n      \"proficiency\": \"fluent\"\n    }\n  ]\n}";
+//send to supabase function 
+function sendToSupabase(parsedJSON) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, data, error, error_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var dataJSON, keys, resume, _a, data, error, _b, resume_ID, resume_IDerr, resumeID, _i, _c, key, _d, _e, _f, value, _g, rowData, rowError, error_1;
+        return __generator(this, function (_h) {
+            switch (_h.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, client.from('documents').insert(parsedJSON)];
+                    _h.trys.push([0, 11, , 12]);
+                    dataJSON = JSON.parse(parsedJSON);
+                    keys = Object.keys(dataJSON);
+                    resume = {};
+                    resume[keys[0]] = dataJSON[keys[0]]; //keys[0] = "name"
+                    resume[keys[4]] = dataJSON[keys[4]]; //keys[4] = "dateOfBirth"
+                    resume[keys[6]] = dataJSON[keys[6]]; //keys[6] = "summary"
+                    console.log(resume);
+                    return [4 /*yield*/, client.from('resumes').insert(resume)];
                 case 1:
-                    _a = _b.sent(), data = _a.data, error = _a.error;
+                    _a = _h.sent(), data = _a.data, error = _a.error;
                     if (error) {
-                        console.error('Error inserting data:', error.message);
+                        console.error('Error inserting into resume table:', error.message);
                     }
                     else {
-                        console.log('Data inserted successfully:', data);
+                        console.log('Data inserted successfully into resume table:', data);
                     }
-                    console.log("Successfully send to DB");
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, client.from('resumes').select('resumeID').eq('name', resume.name).single()];
                 case 2:
-                    error_1 = _b.sent();
-                    console.error('Error sending to the DB:', error_1);
+                    _b = _h.sent(), resume_ID = _b.data, resume_IDerr = _b.error;
+                    if (resume_IDerr) {
+                        console.error('Error fetching ID from resumes table:', resume_IDerr.message);
+                    }
+                    else {
+                        resumeID = resume_ID ? resume_ID.resumeID : null;
+                        resume.resumeID = resumeID;
+                        console.log('Fetching resume ID successfully from resumes table:', resume);
+                    }
+                    _i = 0, _c = Object.keys(dataJSON);
+                    _h.label = 3;
+                case 3:
+                    if (!(_i < _c.length)) return [3 /*break*/, 10];
+                    key = _c[_i];
+                    _d = key;
+                    switch (_d) {
+                        case 'name': return [3 /*break*/, 4];
+                        case 'dateOfBirth': return [3 /*break*/, 4];
+                        case 'summary': return [3 /*break*/, 4];
+                    }
+                    return [3 /*break*/, 5];
+                case 4: return [3 /*break*/, 9]; //skip the keys already stored in resumes table
+                case 5:
+                    _e = 0, _f = dataJSON[key];
+                    _h.label = 6;
+                case 6:
+                    if (!(_e < _f.length)) return [3 /*break*/, 9];
+                    value = _f[_e];
+                    value.resumeID = resume.resumeID; //appending resumeID into value
+                    return [4 /*yield*/, client.from(key).insert(value)];
+                case 7:
+                    _g = _h.sent(), rowData = _g.data, rowError = _g.error;
+                    if (rowError) {
+                        console.error("Error inserting new row in '".concat(key, "' table:"), rowError.message);
+                    }
+                    else {
+                        console.log("New row  inserted successfully in '".concat(key, "' table:"), rowData);
+                    }
+                    _h.label = 8;
+                case 8:
+                    _e++;
+                    return [3 /*break*/, 6];
+                case 9:
+                    _i++;
                     return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                case 10:
+                    console.log("Data successfully sent to Supabase");
+                    return [3 /*break*/, 12];
+                case 11:
+                    error_1 = _h.sent();
+                    console.error('Error sending to the DB:', error_1);
+                    return [3 /*break*/, 12];
+                case 12: return [2 /*return*/];
             }
         });
     });
 }
-splitJSON(resumeData); //call function
+exports.sendToSupabase = sendToSupabase;
+sendToSupabase(resumeData); //call function

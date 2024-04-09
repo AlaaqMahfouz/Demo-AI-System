@@ -2,48 +2,43 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import {isEmptyString} from './index'
 /*
 this code takes the cv parsed content as a string and parse it into a given JSON format
-the returned JSON object should be send to Supabase through sendToSupabase.ts
+the returned formated string should be send to Supabase through sendToSupabase.ts
 */
 
-const textToParse: string = `
-Curriculum Vitae
-Gebran Elias Nemes
-Personal Information
-• Full Name: Gebran Elias Nemes • Phone Number: +9617777777 • E-mail: gebrannemes2003@gmail.com • Birthdate: 4 sept 2003 • Adress: Beirut,Lebanon
-Academics
-• School: Collège St. Elie Btina, Beirut, Lebanon (2006-2021)
-• University: 3rd year Bachelor in Computer Science, Lebanese University, Faculty of Science II, Fanar, Lebanon (2021 - Present)
-• Relevant Coursework: React, HTML/CSS/JavaScript, SQL.
-• Other Coursework: C, C++, Java, Assembly, Prolog, Networking, MATLAB, Android.
-• Platforms: VScode, Eclipse, Android Studio, VS2022, Oracle, ide68000, MATLAB, Packet Tracer, Visual Paradigm, 
-GitHub.
-Experience & Certifications
-• Developed a front-end website project during the second year of university, utilizing HTML, CSS, and JavaScript. 
-(https://github.com/GN1370/Better-Mental-State.git)
-• Developed a React-based online marketplace project during the current third year of university, utilizing React (libraries axios,
-react router dom, express, cors), JavaScript, HTML, CSS, Tailwind CSS, Flowbite-React, MySQL.
-• Developed a project during the current third year of university, utilizing Android (Asynctask), PhpMyAdmin.
-• Obtained the Lebanese Civil Defence Certificate. (2023)
-• Attended the IEEE Clustering Techniques Certificate program. (January 2022)
-• Provided private tutoring in all subjects for school students in Arabic, French and English (2014 - Present).
-Personal Traits
-• Problem Solving
-• Attention to Detail
-• Responsibility
-• Team Spirit
-• Sportsmanship
-• Leadership Skills
-• Helping Others
-Skills and Hobbies
-• Scout. (2009 - Present)
-• Film-Making/Acting.
-• Photography.
-• Arts & Crafts.
-• Drawing/Painting.
-• Cooking/Baking.
-• Swimming/Shallow Diving
-Languages
-• Arabic (Native, Fluent) • French (Fluent) • English (Fluent)
+const textToParse: string = `Jane Joseph Beyrouthy
+Computer Science Undergraduate Student
+Address: Lebanon| E-mail: janebeyrouthy@gmail.com | Mobile: +96176460295 | Nationality: Lebanese
+OBJECTIVE
+My main objective is to secure an internship where I can learn and grow my skills enabling me to kickstart my
+career in data science.
+VOLUNTEERING EXPERIENCE/ MEMBERSHIPS
+∙ Active Lead of Google Developer Student Clubs – Lebanese University Faculty of Sciences II Fanar since
+Aug 2023.
+∙ Active Member in Google Developer Group – Coast Lebanon since Dec 2022.
+∙ Active Member in Google Developer Student Clubs – Lebanese University Faculty of Sciences II Fanar since
+Jan 2023.
+∙ Active Member in Women Techmakers since Mar 2023.
+∙ Active Member in UCO Beirut (University Christian Outreach) since 2019.
+∙ Volunteered in AIESEC Lebanon in 2019.
+∙ Volunteered in St Paul Charity mission from 2015 till 2020.
+∙ Participated in Parlement des Jeunes (USJ) 2017.
+EDUCATION
+2022 - Present (expected to graduate in 2025) Computer Science
+Lebanese University Faculty of Sciences Second Branch (ULFS2) – Fanar
+2019 – 2022 Electrical Engineering (completed the common trunk program)
+Lebanese University Faculty of Engineering Second Branch (ULFG2) – Roumieh
+2018-2019 Architecture
+Lebanese University Faculty of Arts and Architecture (FBAA2) – Furn el Chebbak
+2003 - 2018 French Baccalaureate (specialty Mathematics) With Honors
+Collège des Sœurs des Saints Cœurs – Ain Saadeh, Ain Najem
+LANGUAGES
+Arabic: fluent | French: fluent | English: fluent
+COMPUTER SKILLS
+Microsoft Office (Word, Excel, PowerPoint).
+Google Technologies(Docs, Sheets, Slides, Drive).
+Object-Oriented Programming, design patterns, database, coding skills and problem-solving skills.
+Programming Languages: C++, Java, Python, HTML, CSS, JavaScript, SQL, Android, React, NodeJs.
+Communication and Teamwork: Slack, Notion, MS Teams.
 `;
 
 export async function Parse(textToParse: string): Promise<string> {
@@ -57,9 +52,21 @@ export async function Parse(textToParse: string): Promise<string> {
   const jsonTemplate: string = `
 {
     "name": "",
-    "phoneNumbers": [""],
-    "websites": [""],
-    "emails": [""],
+    "phoneNumbers": [
+      {
+        "phoneNumber": ""
+      }
+    ],
+    "websites": [
+      {
+        "url": ""
+      }
+    ],
+    "emails": [
+      {
+        "email": ""
+      }
+    ],
     "dateOfBirth": "",
     "addresses": [
       {
