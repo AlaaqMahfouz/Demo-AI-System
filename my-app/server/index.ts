@@ -7,6 +7,7 @@ const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
 import{ Parse} from './AI-Parsing2T'
+import {sendToSupabase} from './sendToSupabase'
 import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
@@ -143,8 +144,10 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
       setTimeout(async() => {
         
           console.log("final text : " , finalText);
-          // parse text into a template 
+          // parse text into a structured JSON template 
         const parsedCV = await Parse(finalText);
+        //sending the extracted data from the uploaded CV to supabase database
+        await sendToSupabase(parsedCV);
         console.log("Parsed text is : ", parsedCV)
 
         res.json(parsedCV);
