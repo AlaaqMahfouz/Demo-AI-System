@@ -193,8 +193,5 @@ export async function sendToSupabase(parsedJSON: string) {
         console.error('Error sending to the DB:', error);
     }
 }
-<<<<<<< Updated upstream
-// splitJSON(resumeData); //call function
-=======
 sendToSupabase(resumeData); //call function
->>>>>>> Stashed changes
+
