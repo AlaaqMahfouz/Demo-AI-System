@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import {isEmptyString} from './index'
 /*
 this code takes the cv parsed content as a string and parse it into a given JSON format
-the returned JSON object should be send to Supabase through sendToSupabase.ts
+the returned formated string should be send to Supabase through sendToSupabase.ts
 */
 
 
@@ -17,9 +17,21 @@ export async function Parse(textToParse: string): Promise<string> {
   const jsonTemplate: string = `
 {
     "name": "",
-    "phoneNumbers": [""],
-    "websites": [""],
-    "emails": [""],
+    "phoneNumbers": [
+      {
+        "phoneNumber": ""
+      }
+    ],
+    "websites": [
+      {
+        "url": ""
+      }
+    ],
+    "emails": [
+      {
+        "email": ""
+      }
+    ],
     "dateOfBirth": "",
     "addresses": [
       {
