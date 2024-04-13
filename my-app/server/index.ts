@@ -6,7 +6,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
-import{ Parse} from './AI-Parsing2T'
+import{ Parse} from './AI-Parsing'
 import {sendToSupabase} from './sendToSupabase'
 import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
