@@ -109,7 +109,7 @@ export async function convertText(searchString:string): Promise<string> {
     }
 }
 //searchDatabase(convertRequest(searchText))
-export async function searchDatabase(searchText: string): Promise<any[]> {
+export async function searchDatabase(searchText: string, inputNumber: number): Promise<any[]> {
 
   //call convertText to structure the search text into a JSON format
   const structuredString = await convertText(searchText);
@@ -155,7 +155,7 @@ export async function searchDatabase(searchText: string): Promise<any[]> {
         }
       }
     }
-    const {data , error} = await client.from('resumes').select('name').in('resumeID',selectedResumes);
+    const {data , error} = await client.from('resumes').select('name').in('resumeID',selectedResumes).limit(inputNumber);
     if(error){
       console.error('Error selecting resumes: ',error);
       return [];
