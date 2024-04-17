@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@angular/core": "^17.3.3",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "fs-extra": "^11.2.0",
     "groupdocs-parser-cloud": "^23.10.0",
     "pdf-image-extractor": "^2.0.8",

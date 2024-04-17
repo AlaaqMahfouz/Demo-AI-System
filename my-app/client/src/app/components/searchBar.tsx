@@ -8,7 +8,7 @@ export default function SearchBar(){
                 <div className="relative w-2/3">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg className="w-4 h-4 text-blue-600 dark:text-indigo-500" aria-hidden="true" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            <path stroke="currentColor" strokeLinecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
                     <input type="text" id="search_input" className="block w-full p-4 ps-10 text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-500 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-500 dark:focus:border-indigo-500" placeholder="Search Requirements..." required />
@@ -25,7 +25,7 @@ export default function SearchBar(){
                     </div>
                 </div>
             </div>
-            <button type="button" className="text-white  bg-blue-300 hover:bg-indigo-600 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-blue-600">Submit</button>
+            <button type="button" className="text-white focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 bg-indigo-500 hover:bg-indigo-600 dark:focus:ring-blue-600">Submit</button>
         </form>
     );
 }

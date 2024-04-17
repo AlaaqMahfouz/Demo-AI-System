@@ -109,4 +109,3 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
 };
 
 export default FileUpload;
-

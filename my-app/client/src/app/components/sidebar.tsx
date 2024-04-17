@@ -13,7 +13,7 @@ const Sidebar = (props: { isSidebarOpen: boolean }) => {
     >
         <div style={{ marginRight: '10px' }} className='m-4'>
             <nav className='text-base font-bold flex justify-center items-center m-7'>
-                <Link href={"/logout"} className=" w-fit text-center block py-2 px-3 rounded-full bg-white text-indigo-500">Log out</Link>
+                <Link href="/logout" className=" w-fit text-center block py-2 px-3 rounded-full bg-white text-indigo-500">Log out</Link>
             </nav>
             <p className='text-center font-bold mb-7'>________________________</p>
             <GetOldRecords/>
