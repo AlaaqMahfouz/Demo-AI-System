@@ -2,10 +2,13 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Island_Moments } from 'next/font/google';
 
 interface FileUploadProps {
   onClose: () => void;
 }
+
+
 
 const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const [file, setCvFile] = useState<File | null>(null);
@@ -27,7 +30,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
       setUploadError('Please select at least one file to upload.');
       return;
     }
-
     const formData = new FormData();
     if (file) {
       formData.append('CV', file);
@@ -37,7 +39,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         formData.append('otherFiles', otherFiles[i]);
       }
     }
-
+     
     try {
       const response = await axios.post<any>( // Update response type based on server response
         'http://localhost:4000/upload',
@@ -59,7 +61,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   // Check if at least one file (CV or other) is selected for disabling the upload button
   const hasSelectedFiles = file || (otherFiles && otherFiles.length > 0);
 
-  return (
+
+  return ( 
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex justify-center items-center">
       <div className="bg-white rounded-lg p-4 shadow-md">
         <h5 className="text-center text-xl font-medium mb-4">Upload CV</h5>
@@ -106,6 +109,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
       </div>
     </div>
   );
+ 
 };
 
 export default FileUpload;

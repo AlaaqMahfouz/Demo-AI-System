@@ -8,7 +8,7 @@ export default function LoginPage(){
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const router = useRouter()
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
 
@@ -16,8 +16,8 @@ export default function LoginPage(){
 
     useEffect(() => {
         async function getUser(){
-            const {data: {user}} = await supabase.auth.getUser()
-            setUser(user)
+            const {data: {session}} = await supabase.auth.getSession()
+            setUser(session?.user)
             setLoading(false)
         }
 
@@ -45,7 +45,7 @@ export default function LoginPage(){
             password
         })
         setUser(res.data.user)
-        router.refresh();
+        // router.refresh();
         setEmail('')
         setPassword('')
     }
@@ -57,6 +57,7 @@ export default function LoginPage(){
     }
 
     if (user){
+        // router.push("/home")
         redirect("/home")
     }
 

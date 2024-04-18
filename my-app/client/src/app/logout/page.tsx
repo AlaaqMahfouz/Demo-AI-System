@@ -2,18 +2,34 @@
 
 import { createClientComponentClient, User } from '@supabase/auth-helpers-nextjs';
 import { redirect, useRouter } from "next/navigation";
+import { NextResponse } from 'next/server';
 import { useEffect, useState } from 'react';
 
 export default function LogoutPage(){
     const router = useRouter();
     const supabase = createClientComponentClient();
 
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
-            const {data: {user}} = await supabase.auth.getUser()
-            setUser(user)
+            // try{
+                const {data: {session}} = await supabase.auth.getSession()
+                setUser(session?.user)
+                if(user==null)
+                    {
+                        console.log("no user found");
+                        await redirection()
+                        //  router.replace('/login')
+                    //   return NextResponse.redirect("https://localhost:3000/login")
+                        
+                    }
+            // }catch(error)
+            // {
+            //     console.log("error while authenticating user :"+error);
+              
+            // }
+            
         }
 
         fetchUser();
@@ -22,8 +38,13 @@ export default function LogoutPage(){
     const handleLogout = async () => {
         await supabase.auth.signOut();
         setUser(null);
-        router.refresh();
-        redirect("/login");
+        router.replace('/login')
+        // return NextResponse.redirect("https://localhost:3000/login")
+    }
+
+    const redirection = async ()=>{
+        //  router.replace('/login')
+        return NextResponse.redirect("https://localhost:3000/login")
     }
 
     const handleCancel = {
@@ -61,5 +82,6 @@ export default function LogoutPage(){
         </div>
     </div>
     )}
+   
 
 }
