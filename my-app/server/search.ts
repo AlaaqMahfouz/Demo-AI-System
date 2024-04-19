@@ -143,7 +143,7 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
             }
           }
         } else {
-          const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${searchJSON[table][column]}%`);
+          const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${searchJSON[table][column]}%`).neq(column, null);
             if (error) {
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
