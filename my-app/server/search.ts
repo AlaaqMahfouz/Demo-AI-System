@@ -95,7 +95,7 @@ export async function convertText(searchString:string): Promise<string> {
       
         const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
       
-        const prompt = `This is the job requirements:\n${searchString}\nPlease parse the information into this JSON template:\n${jsonTemplate} while replacing all null values with empty strings.\nRespect the template only and include all requirements.`;
+        const prompt = `This is the job requirements:\n${searchString}\nPlease parse the information into this JSON template:\n${jsonTemplate} while making sure that all missing information are set to null.\nRespect the template only and include all requirements.`;
       
         const result = await model.generateContent(prompt);
         const response = await result.response;
