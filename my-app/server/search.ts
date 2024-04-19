@@ -132,7 +132,7 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
       for(const column of columns){
         if (Array.isArray(searchJSON[table][column])) {
           for(const value of searchJSON[table][column]){
-            const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${value}%`);
+            const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${value}%`).neq(column,null);
             if (error) {
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
