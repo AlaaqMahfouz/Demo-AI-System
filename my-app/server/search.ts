@@ -93,11 +93,12 @@ export async function convertText(searchString:string): Promise<string> {
           return ''; 
     }
 }
-//searchDatabase(convertRequest(searchText))
-export async function searchDatabase(searchText: string, inputNumber: number): Promise<any[]> {
+//this function takes the structured search string (returned by convertText) and the number of results wanted
+//it performs a search query in the database based of this structure and returns an array of the selected resumes as JSON objects
+export async function searchDatabase(structuredSearchString: string, inputNumber: number): Promise<any[]> {
 
   //call convertText to structure the search text into a JSON format
-  const structuredString = await convertText(searchText);
+  //const structuredString = await convertText(searchText);
 
   if(isEmptyString(structuredSearchString))
     {
@@ -150,7 +151,7 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
 
     //from the resume table we select the rows of the resumes that matches the search requirements 
     //we make sure to limit the number of selected rows to the desired number of results and we order ascendently by their IDs
-    const {data , error} = await client.from('resumes').select().in('resumeID',selectedResumes).limit(inputNumber).order('resumeID');
+    const {data , error} = await client.from('resumes').select('resumeID, name').in('resumeID',selectedResumes).limit(inputNumber).order('resumeID');
     if(error){
       //error handeling
       console.error('Error selecting resumes: ',error);
@@ -160,7 +161,7 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
       data.forEach(element => {
         console.log(" Resumes found :" +element.name)
       });
-
+      //data is an array of JSON objects with the keys being 
       return data;
     }
   } catch (error) {
@@ -170,10 +171,59 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
 
   
 }
+//this function saves the search we performed using searchDatabase function in the searches and searchRequirements tables in the database
+//as paramerters this function takes the search title (user input), the structured search string (result of convertText) and the search data (result of searchDatabase)
+export async function saveSearch(searchTitle: string, structuredSearchString:string, searchData: any[]) {
+    try {
+      
+      // Initialize Supabase client
+      const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
 
-export async function saveSearch(structuredSearchString:string, searchData: any[]) {
+      let search: any={}; //empty JSON object
+      search.title = searchTitle; //appending the title to search 
+      let searchResult : number[] = []; //array to store the resume IDs of the search results
+      for(const resume of searchData){
+        const keys = Object.keys(searchData); //keys = ['resumeID','name'] 
+        searchResult.push(resume[keys[0]]); //resume[resumeID]
+      }
+      search.searchResult = searchResult; //appending searchResult array to search 
 
-  
+      /*
+        search = {
+          "title": "",
+          "searchResult": []
+        }
+       */
+
+      //query to insert into searches table
+      const { data: saveSearch, error:insertError } = await client.from('searches').insert(search);
+      if (insertError) {
+          console.error('Error inserting into searches table:', insertError.message);
+      } else {
+      console.log( 'Successfully saving search into searches table:', saveSearch);
+      }
+      let searchID: number = 0;
+      //query to select searchID from searches
+      const {data, error} = await client.from('searches').select('searchID').eq('title',search.title).single();
+      if (error) {
+        console.error('Error selecting searchID: ',error.message);
+      } else {
+        searchID =data.searchID;
+      }
+
+      //query to insert into searchRequirements table
+      const { data: saveSearchReq, error:insertSearchReqError } = await client.from('searchRequirements').insert({
+        "searchRequirement" : structuredSearchString,
+        "searchID" : searchID
+      });
+      if (insertSearchReqError) {
+          console.error('Error inserting into searches table:', insertSearchReqError.message);
+      } else {
+      console.log( 'Successfully saving search into searches table:', saveSearchReq);
+      }
+    } catch (error) {
+      console.error('Error saving search:', error);
+    }
 }
 
 function selectResume(selectedResumes: number[], ID: number){
