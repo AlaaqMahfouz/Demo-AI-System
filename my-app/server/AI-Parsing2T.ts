@@ -100,7 +100,7 @@ export async function Parse(textToParse: string): Promise<string> {
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
 
-    const prompt = `This is a resume:\n${textToParse}\nPlease parse the information into a JSON format following the structure:\n${jsonTemplate} while replacing all null values with empty strings`;
+    const prompt = `This is a resume:\n${textToParse}\nPlease parse the information into a JSON format following the structure:\n${jsonTemplate} while making sure that all missing information are set to null`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
