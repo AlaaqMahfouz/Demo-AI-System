@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { use, useRef, useState } from 'react';
 import axios from 'axios';
 import { Island_Moments } from 'next/font/google';
 
@@ -31,6 +31,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
       return;
     }
     const formData = new FormData();
+    
     if (file) {
       formData.append('CV', file);
     }
@@ -59,6 +60,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
     }
   };
 
+  const otherFilesHandle = useRef<HTMLInputElement>(null); 
+
   // Check if at least one file (CV or other) is selected for disabling the upload button
   const hasSelectedFiles = file || (otherFiles && otherFiles.length > 0);
 
@@ -74,6 +77,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
           <input
             type="file"
             id="file"
+            name="CV"
             className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             onChange={handleCvChange}
           />
@@ -89,6 +93,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
             className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             onChange={handleOtherFilesChange}
             multiple
+            ref={otherFilesHandle}
           />
         </div>
         {uploadError && <p className="text-red-500 text-sm mb-2">{uploadError}</p>}

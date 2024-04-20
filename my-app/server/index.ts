@@ -27,31 +27,61 @@ let completeFilePath =''
 // multer config
 const storage =multer.diskStorage({
   destination:(req:any,file:any,cb:any)=>{
+    if(file.fieldname==="CV")
     cb(null,'../client/files')
+
+    // else
+    // cb(null,'../client/supportingFiles')
   },
   filename: (req:any,file:any,cb:any)=>{
-    console.log(file)
-        // Generating Unique name 
-        fileName=Date.now() + path.extname(file.originalname);
-        completeFilePath='../client/files/' + fileName
-        cb(null,fileName)
-    
-    console.log("filepath : " , fileName)
-  }
-})
+    try {
+
+      console.log(file)
+      console.log(file.originalname)
+      // Generating Unique name   
+      fileName=Date.now() + path.extname(file.originalname);
+      
+      completeFilePath='../client/files/' + fileName
+      console.log("complete file path : " +completeFilePath)
+      cb(null,fileName)
+      
+      console.log("filepath : " , fileName)
+    }catch(error)
+    {
+      console.log("error : " + error)
+    }
+    }
+  })
+
 
 const upload = multer({storage : storage})
 
-app.get('/upload',upload.single('CV') ,async (req:any,res:any)=>{
+// const upload = multer({ 
+//   storage: {
+//     fields: [
+//       { name: 'CV', storage: storage },
+//       { name: 'otherFiles', storage: storage }
+//     ]
+//   }
+// });
+ 
+// app.get('/upload',upload.single('CV') ,async (req:any,res:any)=>{
 
-  res.send("image uploaded from get")
-}),
+//   res.send("image uploaded from get")
+// }),
 
 // handling request
-app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
+app.post('/upload', upload.fields([{ name: 'CV' } ,{name:'otherFiles'}]),async (req:any,res:any)=>{
+
+  console.log('hi')
+  let file =  req.files['CV'];
+
+  console.log("FIle:" +file)
+
+  let supportingFiles = req.files['otherFiles']
 
 
-  let file =  req.file;
+  
   // variable for extracted text
   let finalText='';
   let TextExtracted:string[]
@@ -61,7 +91,6 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
         console.log("file Name" , file )
   
     
-    
     if (file) {           
             
       
@@ -69,7 +98,7 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
           const docExtensions = ['doc' , 'docx'];
 
           // extract extension from file's name
-          const extension =  file?.originalname.split('.').pop()?.toLowerCase() || '';
+          const extension =  file[0]?.originalname.split('.').pop()?.toLowerCase() || '';
 
           console.log("extesnion is  :" + extension)
 
@@ -147,7 +176,7 @@ app.post('/upload',upload.single('CV') ,async (req:any,res:any)=>{
           // parse text into a structured JSON template 
         const parsedCV = await Parse(finalText);
         //sending the extracted data from the uploaded CV to supabase database
-        await sendToSupabase(parsedCV);
+        await sendToSupabase(parsedCV,supportingFiles);
         console.log("Parsed text is : ", parsedCV)
 
         res.json(parsedCV);
@@ -314,9 +343,11 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
 
     app.post('/search',async (req:any,res:any)=>{
       const {data} = req.body;
-      console.log("Data :"+data);
+      const limit = data.limitNum;
+      console.log("Data :"+data.inputValue);
+      console.log("limit :"+limit);
         console.log("searching database...");
-        searchDatabase(data,5)
+        searchDatabase(data.inputValue,data.limitNum  )
 
       
     })
