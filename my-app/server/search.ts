@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
     functions found in this file:
     -convertText : convertes the search text into a structured requirements using GEMINI AI
     -searchDatabase: performs the search in the database
+    -newSearch: call searchDatabase for the 1st time
     -saveSearch: stores the search requirements and the search result in the database
     -searchAgain: returns search results not previously given  
 */
