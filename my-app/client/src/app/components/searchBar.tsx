@@ -1,6 +1,83 @@
 'use client'
 
-export default function SearchBar(){
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+// export default function SearchBar(){
+
+    
+
+   export default function searchBar(){
+
+   
+
+        const inputRef=useRef<HTMLInputElement>(null)
+        const limitRef=useRef<HTMLInputElement>(null)
+    const[inputValue,setInputValue]=useState<any>();
+
+
+    let timeoutId:any;
+
+
+
+
+    // useEffect( ()=>{
+        function debounce(func:Function, delay:any) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(func, delay);
+          }
+
+
+          async function handleInput () {
+            // Your code to handle the input goes here
+            console.log("Input handled after debounce");
+
+            const inputValue = inputRef.current?.value;
+
+            const limitNum = limitRef.current?.value;
+
+            console.log("limit :"+limitNum);
+            if(!(inputValue?.trim()==="") && inputValue!=undefined){
+                
+                console.log("entered input :"+inputValue )
+           
+                await axios.post('http://localhost:4000/search',{data:{inputValue,limitNum}})   
+            }
+            
+          }
+        
+
+          const handleChange=()=>{
+            debounce(handleInput, 3000); // 3000 milliseconds = 3 seconds
+          }
+   
+          
+
+    //     if(!(inputValue?.trim()==="") && inputValue!=undefined){
+    //     const SearchDatabase= async()=>{
+
+    //         console.log("entered input :"+inputValue )
+           
+    //             await axios.post('http://localhost:4000/search',{data:inputValue})              
+
+    //     }
+        
+    //     SearchDatabase();
+    // }
+
+//    },[inputValue])
+
+
+//    const handleChange = ((e:any)=>{
+//     setTimeout(function() {
+//         console.log("Delayed action executed");
+//         setInputValue(e.target.value);
+//       }, 7000); // Delay of 1000 milliseconds (1 second)
+      
+//    })
+   
+
+
+
     return(
         <form className="form text-center searchbar">
             <div className="flex items-center justify-center m-5 mt-12 mb-1">
@@ -11,7 +88,7 @@ export default function SearchBar(){
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input type="text" id="search_input" className="block w-full p-4 ps-10 text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-500 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-500 dark:focus:border-indigo-500" placeholder="Search Requirements..." required />
+                    <input type="text" id="search_input" ref={inputRef} onChange={handleChange} className="block w-full p-4 ps-10 text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-500 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-500 dark:focus:border-indigo-500" placeholder="Search Requirements..." required />
                 </div>
             </div>
             <div className="form flex items-center justify-center h-full">
@@ -21,7 +98,7 @@ export default function SearchBar(){
                         <p className="text-indigo-600 p-4">
                             Enter the number of results needed:
                         </p>
-                        <input type="number" id="resultNumber" name="resultNumber" min="1" max="20" className="block ps-4 text-center text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-400 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-400 dark:focus:border-indigo-400" placeholder="5" required />
+                        <input type="number" id="resultNumber" name="resultNumber" defaultValue='5' min="1" max="20" ref={limitRef} className="block ps-4 text-center text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-400 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-400 dark:focus:border-indigo-400" placeholder="5" required />
                     </div>
                 </div>
             </div>

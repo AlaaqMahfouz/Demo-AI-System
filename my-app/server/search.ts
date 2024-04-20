@@ -18,59 +18,54 @@ export async function convertText(searchString:string): Promise<string> {
         console.error("text is null and couldn't be converted!");
         return '';
     }
-    
-    const jsonTemplate: string = `
-      {
-          "addresses": 
-            {
-              "city": "",
-              "state": "",
-              "country": ""
-            }
-          ,
-          "education": [
-            {
+  
+    const jsonTemplate: string = `{
+      "addresses": {
+          "city": "",
+          "state": "",
+          "country": ""
+      },
+      "education": 
+          {
               "school": [""],
               "degree": [""],
               "fieldOfStudy": [""],
               "startDate": "",
               "endDate": ""
-            }
-          ],
-          "workExperience": [
-            {
+          }
+      ,
+      "workExperience": 
+          {
               "company": "",
               "position": "",
               "startDate": "",
               "endDate": ""
-            }
-          ],
-          "projects": [
-            {
+          }
+      ,
+      "projects": 
+          {
               "projectName": "",
               "languages": "",
               "startDate": "",
               "endDate": ""
-            }
-          ],
-          "skills": [
-            {
-              "skillName": ""
-            }
-          ],
-          "certifications": [
-            {
+          }
+      ,
+      "skills": {
+          "skillName": ""
+      },
+      "certifications": 
+          {
               "certificationName": ""
-            }
-          ],
-          "languages": [
-            {
+          }
+      ,
+      "languages": 
+          {
               "languageName": "",
               "proficiency": ""
-            }
-          ]
-      }
-      `;
+          }
+      
+  }`;
+    
       
     const genAI = new GoogleGenerativeAI("AIzaSyBDojqEFTP5MbdXksNPUgh6a1vq84VDIgw"); // config gemini AI 
       
@@ -98,16 +93,11 @@ export async function convertText(searchString:string): Promise<string> {
           return ''; 
     }
 }
-
-//this function takes the structured search text as string and the number of results desired 
-//using the structured JSON object we perform the searching using a select query that passes through the entire database
-//we store the selected resumes' IDs in an array and make sure that we dont have duplicates ids
-//using this array we would select all the resumes' names
-//the return of this function is an array of JSON objects
-export async function searchDatabase(structuredSearchString: string, inputNumber: number): Promise<any[]> {
+//searchDatabase(convertRequest(searchText))
+export async function searchDatabase(searchText: string, inputNumber: number): Promise<any[]> {
 
   //call convertText to structure the search text into a JSON format
-  //const structuredString = await convertText(searchText);
+  const structuredString = await convertText(searchText);
 
   if(isEmptyString(structuredSearchString))
     {
@@ -125,17 +115,13 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
     const tables = Object.keys(searchJSON); //the top-level keys of our JSON object matches the tables' titles we want to search through in the database
     //we iterate through each table 
     for (const table of tables) {
-      const columns = Object.keys(searchJSON[table]); //the 2nd-level keys of the JSON object matches the columns of each table
-      //for each column we select the resume's ID at the row where the value in the database matches the value in the JSON object
+      const columns = Object.keys(searchJSON[table]);
       for(const column of columns){
-        //in some search cases we can have values as arrays in the JSON object which holds the search requirements 
         if (Array.isArray(searchJSON[table][column])) {
           //so we have to perform the select query for each value of this array 
           for(const value of searchJSON[table][column]){
-            //the select query returns the resume ID of the row that matches the requirement making sure we don't match null values together
             const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${value}%`).neq(column,null);
             if (error) {
-              //error handeling
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
             } else {
@@ -147,10 +133,8 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
             }
           }
         } else {
-          //the case where the value in the JSON object are not an array
           const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${searchJSON[table][column]}%`).neq(column, null);
-          if (error) {
-              //error handeling
+            if (error) {
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
           } else {
@@ -173,12 +157,18 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
       return [];
     }else{
       console.log('Successfully selecting resumes');
+      data.forEach(element => {
+        console.log(" Resumes found :" +element.name)
+      });
+
       return data;
     }
   } catch (error) {
     console.error('Error searching through the database:', error);
     return [];
   }
+
+  
 }
 
 export async function saveSearch(structuredSearchString:string, searchData: any[]) {
