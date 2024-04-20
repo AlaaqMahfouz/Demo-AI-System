@@ -347,7 +347,7 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
       console.log("Data :"+data.inputValue);
       console.log("limit :"+limit);
         console.log("searching database...");
-        searchDatabase(data.inputValue,data.limitNum  )
+        searchDatabase(data.inputValue,data.limitNum, [] ) //new search
 
       
     })

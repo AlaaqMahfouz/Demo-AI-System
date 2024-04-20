@@ -3,9 +3,11 @@ import {isEmptyString} from './index';
 import { createClient } from "@supabase/supabase-js";
 
 /*
-    this code should handle the search through the database based on the user's requirements
-    1st we should use Gemini AI to  convert the request into structured data and a query
-    then based on this query we search the database, and return the results as a list of candidates
+    functions found in this file:
+    -convertText : convertes the search text into a structured requirements using GEMINI AI
+    -searchDatabase: performs the search in the database
+    -saveSearch: stores the search requirements and the search result in the database
+    -searchAgain: returns search results not previously given  
 */
 
 //convertText takes the search string text and converts it into a structured JSON object defined inside the code
@@ -93,12 +95,11 @@ export async function convertText(searchString:string): Promise<string> {
           return ''; 
     }
 }
-//this function takes the structured search string (returned by convertText) and the number of results wanted
+//this function takes the structured search string (returned by convertText) and the number of results wanted and an array of selected resumes
+//for new searches this array should be empty
+//for searching again we should pass the already 
 //it performs a search query in the database based of this structure and returns an array of the selected resumes as JSON objects
-export async function searchDatabase(structuredSearchString: string, inputNumber: number): Promise<any[]> {
-
-  //call convertText to structure the search text into a JSON format
-  //const structuredString = await convertText(searchText);
+export async function searchDatabase(structuredSearchString: string, inputNumber: number, selectedResumes: number[]): Promise<any[]> {
 
   if(isEmptyString(structuredSearchString))
     {
@@ -111,13 +112,14 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
-    
-    const selectedResumes : number[] = []; //initializing the array of the selected resumes' IDs 
+     
     const tables = Object.keys(searchJSON); //the top-level keys of our JSON object matches the tables' titles we want to search through in the database
     //we iterate through each table 
     for (const table of tables) {
       const columns = Object.keys(searchJSON[table]);
       for(const column of columns){
+        //in some cases, the searches values in the requirements are arrays 
+        //i.g. "degree" : [Bachelor's, Master's]
         if (Array.isArray(searchJSON[table][column])) {
           //so we have to perform the select query for each value of this array 
           for(const value of searchJSON[table][column]){
@@ -170,6 +172,9 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
   }
 
   
+}
+export async function newSearch(structuredSearchString: string, inputNumber: number): Promise<any[]> {
+  return searchDatabase(structuredSearchString, inputNumber, [])
 }
 //this function saves the search we performed using searchDatabase function in the searches and searchRequirements tables in the database
 //as paramerters this function takes the search title (user input), the structured search string (result of convertText) and the search data (result of searchDatabase)
@@ -224,6 +229,43 @@ export async function saveSearch(searchTitle: string, structuredSearchString:str
     } catch (error) {
       console.error('Error saving search:', error);
     }
+}
+
+//this function generate new search results to a previous search 
+//for the same search requirements it select resumes not previously selected
+export async function searchAgain(searchTitle: string, inputNumber: number): Promise<any[]> {
+  try {
+    // Initialize Supabase client
+    const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+  
+    let searchID: number = 0;
+    let selectedResumes: number []=[];
+    //using the search title passed as parameters to the function we select the searchID 
+    const {data,error} = await client.from('searches').select('searchID, searchResult').eq('title',searchTitle).single()
+    if (error) {
+      console.error('Error selecting searchID: ',error.message)
+    } else {
+      searchID = data.searchID;
+      selectedResumes = data.searchResult;
+    }
+
+    let structuredSearchString: string = "";
+    //using the searchID we get the structured search string (result of the convertText function)
+    const {data:selectSearchReq, error: selectSearchReqError} =await client.from('searchRequirements').select('searchRequirement').eq('searchID', searchID).single()
+    if (selectSearchReqError) {
+      console.error('Error selecting search requirement from searchRequirements table: ', selectSearchReqError.message);
+    } else {
+      structuredSearchString = selectSearchReq.searchRequirement;
+    }
+
+    //we call searchDatabase function passing the structured search string, the input number and the selectedResumes array 
+    //in this case the selectedResumes array is non-empty; it has the previously selected resumes in the previous search 
+    //so the returned resumes from this function were not previously selected
+    return searchDatabase(structuredSearchString, inputNumber,selectedResumes)
+  } catch (error) {
+    console.error('Error searching again: ',error)
+    return []
+  }
 }
 
 function selectResume(selectedResumes: number[], ID: number){
