@@ -63,11 +63,10 @@ export async function convertText(searchString:string): Promise<string> {
               "endDate": ""
             }
           ],
-          "skills": [
+          "skills": 
             {
               "skillName": ""
-            }
-          ],
+            },
           "certifications": [
             {
               "certificationName": ""
@@ -108,11 +107,20 @@ export async function convertText(searchString:string): Promise<string> {
           return ''; 
     }
 }
+
+
+
+
+
+
+
 //searchDatabase(convertRequest(searchText))
 export async function searchDatabase(searchText: string, inputNumber: number): Promise<any[]> {
 
   //call convertText to structure the search text into a JSON format
   const structuredString = await convertText(searchText);
+
+  console.log("structured string :" + structuredString);
 
   if(isEmptyString(structuredString))
     {
@@ -129,11 +137,21 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
     const tables = Object.keys(searchJSON); 
     for (const table of tables) {
       const columns = Object.keys(searchJSON[table]);
+      columns.forEach(column => {
+        
+        console.log("columns here :"+ column);
+      });
       for(const column of columns){
+        console.log("searching column :" + column);
         if (Array.isArray(searchJSON[table][column])) {
           for(const value of searchJSON[table][column]){
             const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${value}%`);
-            if (error) {
+            if(data!=null)
+             
+                
+            console.log("Data found because of : " + client.from(table).select(column))
+
+             if (error) {
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
             } else {
@@ -143,7 +161,13 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
             }
           }
         } else {
+          
           const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${searchJSON[table][column]}%`);
+          if(data!=null)
+            data.forEach(element => {
+              
+          console.log("Data found from" + column + "of value :" + searchJSON[table][column] +"for resume :"+ element.resumeID);
+            });
             if (error) {
               console.error(`Error searching ${table} at ${column}:`, error.message);
               break;
@@ -161,12 +185,18 @@ export async function searchDatabase(searchText: string, inputNumber: number): P
       return [];
     }else{
       console.log('Successfully selecting resumes');
+      data.forEach(element => {
+        console.log(" Resumes found :" +element.name)
+      });
+
       return data;
     }
   } catch (error) {
     console.error('Error searching through the database:', error);
     return [];
   }
+
+  
 }
 
 function selectResume(selectedResumes: number[], ID: number){

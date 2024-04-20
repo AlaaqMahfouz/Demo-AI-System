@@ -51,6 +51,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         }
       );
       console.log('Files uploaded:', response.data);
+      
       onClose(); // Close the popup after successful upload
     } catch (error) {
       console.error('Error uploading files:', error);

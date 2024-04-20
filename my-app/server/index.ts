@@ -13,11 +13,11 @@ import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
-
-
+const bodyParser = require('body-parser');
+import {searchDatabase} from './search'
 // express cors
 app.use(cors())
-
+app.use(bodyParser.json());
 
 let fileName =''
 // path of the uploaded file
@@ -311,6 +311,15 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
                 return /^\s*$/.test(str);
             }
 
+
+    app.post('/search',async (req:any,res:any)=>{
+      const {data} = req.body;
+      console.log("Data :"+data);
+        console.log("searching database...");
+        searchDatabase(data,5)
+
+      
+    })
 
               
 app.listen(4000);

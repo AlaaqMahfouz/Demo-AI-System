@@ -1,6 +1,46 @@
 'use client'
 
-export default function SearchBar(){
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+// export default function SearchBar(){
+
+    
+
+    const SearchBar: React.FC = () => {
+
+        const inputRef=useRef<HTMLInputElement>(null)
+    const[inputValue,setInputValue]=useState<any>();
+
+    useEffect( ()=>{
+
+
+        
+          
+
+        if(!(inputValue?.trim()==="") && inputValue!=undefined){
+        const SearchDatabase= async()=>{
+
+            console.log("entered input :"+inputValue )
+           
+                await axios.post('http://localhost:4000/search',{data:inputValue})              
+
+        }
+        
+        SearchDatabase();
+    }
+
+   },[inputValue])
+
+
+   const handleChange = ((e:any)=>{
+    setTimeout(function() {
+        console.log("Delayed action executed");
+        setInputValue(e.target.value);
+      }, 5000); // Delay of 1000 milliseconds (1 second)
+      
+   })
+   
+
     return(
         <form className="form text-center searchbar">
             <div className="flex items-center justify-center m-5 mt-12 mb-1">
@@ -11,7 +51,7 @@ export default function SearchBar(){
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input type="text" id="search_input" className="block w-full p-4 ps-10 text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-500 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-500 dark:focus:border-indigo-500" placeholder="Search Requirements..." required />
+                    <input type="text" id="search_input" ref={inputRef} onChange={handleChange} className="block w-full p-4 ps-10 text-sm text-white border border-white rounded-full bg-white focus:ring-white focus:border-indigo-500 dark:bg-white dark:border-indigo-500 dark:placeholder-gray-400 dark:text-gray-900 dark:focus:ring-indigo-500 dark:focus:border-indigo-500" placeholder="Search Requirements..." required />
                 </div>
             </div>
             <div className="form flex items-center justify-center h-full">
@@ -29,3 +69,4 @@ export default function SearchBar(){
         </form>
     );
 }
+export default SearchBar;
