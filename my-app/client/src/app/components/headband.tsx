@@ -3,14 +3,14 @@
 export default function Headband(props: { onToggle: () => void }) {
   return (
     <header>
-      <div className="p-6 w-full h-6 bg-red text-white border-gray-200 dark:bg-indigo-500">
+      {/* <div className="p-6 w-full h-6 bg-red text-white border-gray-200 dark:bg-indigo-500"> */}
         <div>
-          <button onClick={props.onToggle}>
+          <button onClick={props.onToggle}  className="m-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              className="h-7 w-7"
               fill="none"
-              viewBox="0 0 24 24"
+              viewBox="0 0 20 20"
               stroke="currentColor"
             >
               <path
@@ -22,7 +22,7 @@ export default function Headband(props: { onToggle: () => void }) {
             </svg>
           </button>
         </div>
-      </div>
+      {/* </div> */}
     </header>
   );
 }
