@@ -2,7 +2,7 @@ import mammoth from "mammoth"
 const Tesseract = require('tesseract.js');
 const multer=require('multer')
 const path=require('path')
-const express = require('express')
+import express, { Express, Request, Response } from 'express';
 const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
@@ -14,7 +14,7 @@ const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase} from './search'
+import {searchDatabase, convertText, saveSearch, searchAgain, newSearch} from './search'
 // express cors
 app.use(cors())
 app.use(bodyParser.json());
@@ -351,6 +351,48 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
 
       
     })
+
+    app.post('/convert-text', async (req:Request, res: Response) => {
+      try {
+        const {searchText} = req.body;
+        const structuredSearchString = await convertText(searchText);
+
+        res.status(200).json(structuredSearchString);
+      } catch (error) {
+        console.error('Error converting search text:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.post('/new-search', async (req: Request, res: Response)=>{
+      try {
+        const {structuredSearchString, limit} = req.body;
+        const searchResult = await newSearch(structuredSearchString, limit); //new search
+
+        res.status(200).json(searchResult);
+      } catch (error) {
+        console.error('Error performing new search:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.post('/save-search', async (req: Request, res: Response) => {
+      try {
+        const {searchTitle, structuredSearchString, searchResults} = req.body;
+        saveSearch(searchTitle, structuredSearchString, searchResults);
+
+        res.status(200).json({message: 'Search Result succesfully saved'})
+      } catch (error) {
+        console.error('Error saving search:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+
+    })
+
+    app.post('/search-again', async (req: Request, res: Response) => {
+      
+    })
+
 
               
 app.listen(4000);

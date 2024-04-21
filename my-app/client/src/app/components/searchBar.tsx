@@ -2,16 +2,10 @@
 
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-// export default function SearchBar(){
 
-    
-
-   export default function searchBar(){
-
-   
-
-        const inputRef=useRef<HTMLInputElement>(null)
-        const limitRef=useRef<HTMLInputElement>(null)
+const SearchBar: React.FC = () => {
+    const inputRef=useRef<HTMLInputElement>(null)
+    const limitRef=useRef<HTMLInputElement>(null)
     const[inputValue,setInputValue]=useState<any>();
 
 
@@ -106,3 +100,5 @@ import { useEffect, useRef, useState } from "react";
         </form>
     );
 }
+
+export default SearchBar;

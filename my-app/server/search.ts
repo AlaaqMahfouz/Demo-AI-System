@@ -98,9 +98,9 @@ export async function convertText(searchString:string): Promise<string> {
 }
 //this function takes the structured search string (returned by convertText) and the number of results wanted and an array of selected resumes
 //for new searches this array should be empty
-//for searching again we should pass the already 
+//for searching again we should pass the search result array 
 //it performs a search query in the database based of this structure and returns an array of the selected resumes as JSON objects
-export async function searchDatabase(structuredSearchString: string, inputNumber: number, selectedResumes: number[]): Promise<any[]> {
+export async function searchDatabase(structuredSearchString: string, inputNumber: number, previouslySelectedResumes: number[]): Promise<any[]> {
 
   if(isEmptyString(structuredSearchString))
     {
@@ -113,7 +113,8 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
-     
+    
+    let selectedResumes: number[] = [];
     const tables = Object.keys(searchJSON); //the top-level keys of our JSON object matches the tables' titles we want to search through in the database
     //we iterate through each table 
     for (const table of tables) {
@@ -132,7 +133,9 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
               //data is an array of JSON objects with resumeID as the key 
               for(const resume of data){
                 //for each resume we make sure this resume was not selected previously using the selectResume function
-                selectResume(selectedResumes, resume.resumeID);
+                if (!previouslySelectedResumes.includes(resume.resumeID)) {
+                  selectResume(selectedResumes, resume.resumeID);
+                }
              } 
             }
           }
@@ -145,7 +148,9 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
             //data is an array of JSON objects with resumeID as the key
             for(const resume of data){
               //for each resume we make sure this resume was not selected previously using the selectResume function
-              selectResume(selectedResumes, resume.resumeID);
+              if (!previouslySelectedResumes.includes(resume.resumeID)) {
+                selectResume(selectedResumes, resume.resumeID);
+              }
             } 
           }
         }
@@ -240,14 +245,14 @@ export async function searchAgain(searchTitle: string, inputNumber: number): Pro
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
   
     let searchID: number = 0;
-    let selectedResumes: number []=[];
+    let previouslySelectedResumes: number []=[];
     //using the search title passed as parameters to the function we select the searchID 
     const {data,error} = await client.from('searches').select('searchID, searchResult').eq('title',searchTitle).single()
     if (error) {
       console.error('Error selecting searchID: ',error.message)
     } else {
       searchID = data.searchID;
-      selectedResumes = data.searchResult;
+      previouslySelectedResumes = data.searchResult;
     }
 
     let structuredSearchString: string = "";
@@ -262,7 +267,7 @@ export async function searchAgain(searchTitle: string, inputNumber: number): Pro
     //we call searchDatabase function passing the structured search string, the input number and the selectedResumes array 
     //in this case the selectedResumes array is non-empty; it has the previously selected resumes in the previous search 
     //so the returned resumes from this function were not previously selected
-    return searchDatabase(structuredSearchString, inputNumber,selectedResumes)
+    return searchDatabase(structuredSearchString, inputNumber,previouslySelectedResumes)
   } catch (error) {
     console.error('Error searching again: ',error)
     return []
