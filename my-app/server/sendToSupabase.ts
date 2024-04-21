@@ -24,11 +24,13 @@ export async function sendToSupabase(parsedJSON: string,supportingFiles:any) {
         resume[keys[0]] = dataJSON[keys[0]]; //keys[0] = "name"
         resume[keys[4]] = dataJSON[keys[4]]; //keys[4] = "dateOfBirth"
         resume[keys[6]] = dataJSON[keys[6]]; //keys[6] = "summary"
+        resume.resumeInfo = parsedJSON;      // appending resume info to resume 
         /*
           resume = {
             "name": "CVname",
             "dateOfBirth": "CVdateOfBirth",
-            "summary": "CVsummary"
+            "summary": "CVsummary",
+            "resumeInfo": parsedJSON
           }
          */
         //query to insert into resumes table
