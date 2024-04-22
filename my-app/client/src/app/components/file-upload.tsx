@@ -32,7 +32,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
     }
 
     try {
-      // Option 1: Upload using Supabase (new section)
+      // 1: Upload using Supabase (new section)
       for (let i = 0; i < (file ? 1 : 0) + (otherFiles?.length || 0); i++) {
         const currentFile = i === 0 ? file : otherFiles?.item(i - 1);
         if (!currentFile) continue;
@@ -74,7 +74,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         reader.readAsArrayBuffer(currentFile);
       }
 
-      // Option 2: Upload using Axios (existing section)
+      // 2: Upload using Axios (existing section)
       const formData = new FormData();
 
       if (file) {
