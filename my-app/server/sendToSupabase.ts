@@ -6,7 +6,7 @@ the content of the json object which structures the extracted data is split into
 */
 
 //send to supabase function 
-export async function sendToSupabase(parsedJSON: string,supportingFiles:any) {
+export async function sendToSupabase(parsedJSON: string) {
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
@@ -80,9 +80,9 @@ export async function sendToSupabase(parsedJSON: string,supportingFiles:any) {
         console.log("Data successfully sent to Supabase");
 
 
-         await client.storage
-        .from('Supporting Docs')
-        .upload(supportingFiles.originalname, supportingFiles);
+        //  await client.storage
+        // .from('Supporting Docs')
+        // .upload(supportingFiles.originalname, supportingFiles);
 
         
     }catch(error){
