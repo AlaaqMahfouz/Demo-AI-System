@@ -2,7 +2,11 @@
 
 import React, { use, useRef, useState } from 'react';
 import axios from 'axios';
-import { Island_Moments } from 'next/font/google';
+
+import { createClient } from '@supabase/supabase-js'; // Import Supabase client
+
+const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); //values in env.local
+
 
 interface FileUploadProps {
   onClose: () => void;
