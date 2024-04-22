@@ -80,6 +80,7 @@ app.post('/upload', upload.fields([{ name: 'CV' } ,{name:'otherFiles'}]),async (
 
   let supportingFiles = req.files['otherFiles']
 
+  console.log
 
   
   // variable for extracted text
