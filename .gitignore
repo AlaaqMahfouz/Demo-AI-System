@@ -1,2 +1,15 @@
 
 my-app/client/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node
+
+node_modules/
+
+package-lock.json
+yarn.lock
+dist/
+build/
+*.js
+logs/
+*.log
+.vscode/
+.idea/
+.cache/

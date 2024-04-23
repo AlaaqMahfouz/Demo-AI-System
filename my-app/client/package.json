@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "axios": "^1.6.8",
     "busboy": "^1.6.0",
     "express": "^4.19.1",

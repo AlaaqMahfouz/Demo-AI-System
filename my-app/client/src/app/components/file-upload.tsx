@@ -4,7 +4,7 @@ import React, { use, useRef, useState } from 'react';
 import axios from 'axios';
 import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
-const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); // Create Supabase client instance, values are from .env.local
+// const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); // Create Supabase client instance, values are from .env.local
 
 interface FileUploadProps {
   onClose: () => void;
@@ -32,47 +32,47 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
     }
 
     try {
-      // 1: Upload using Supabase (new section)
-      for (let i = 0; i < (file ? 1 : 0) + (otherFiles?.length || 0); i++) {
-        const currentFile = i === 0 ? file : otherFiles?.item(i - 1);
-        if (!currentFile) continue;
+    //   // 1: Upload using Supabase (new section)
+    //   for (let i = 0; i < (file ? 1 : 0) + (otherFiles?.length || 0); i++) {
+    //     const currentFile = i === 0 ? file : otherFiles?.item(i - 1);
+    //     if (!currentFile) continue;
 
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-          if (event.target) {
-            const fileData = event.target.result;
-            if (typeof fileData === 'string' || fileData instanceof ArrayBuffer) {
-              const filename = currentFile.name;
-              const contentType = currentFile.type;
+    //     const reader = new FileReader();
+    //     reader.onload = async (event) => {
+    //       if (event.target) {
+    //         const fileData = event.target.result;
+    //         if (typeof fileData === 'string' || fileData instanceof ArrayBuffer) {
+    //           const filename = currentFile.name;
+    //           const contentType = currentFile.type;
 
-              try {
-                const { data, error } = await supabase
-                  .storage
-                  .from('Supporting Docs') // Use your bucket name here
-                  .upload(filename, fileData, {
-                    contentType,
-                  });
+    //           try {
+    //             const { data, error } = await supabase
+    //               .storage
+    //               .from('Supporting Docs') // Use your bucket name here
+    //               .upload(filename, fileData, {
+    //                 contentType,
+    //               });
 
-                if (error) {
-                  console.error('Error uploading file:', error);
-                  setUploadError('An error occurred during upload. Please try again.');
-                  return; // Exit the loop on error
-                }
+    //             if (error) {
+    //               console.error('Error uploading file:', error);
+    //               setUploadError('An error occurred during upload. Please try again.');
+    //               return; // Exit the loop on error
+    //             }
 
-                console.log('File uploaded:', data);
-              } catch (error) {
-                console.error('Error uploading file:', error);
-                setUploadError('An error occurred during upload. Please try again.');
-                return; // Exit the loop on error
-              }
-            } else {
-              console.error('Unexpected file data type:', fileData);
-              // Handle the case where fileData is not a string or ArrayBuffer
-            }
-          }
-        };
-        reader.readAsArrayBuffer(currentFile);
-      }
+    //             console.log('File uploaded:', data);
+    //           } catch (error) {
+    //             console.error('Error uploading file:', error);
+    //             setUploadError('An error occurred during upload. Please try again.');
+    //             return; // Exit the loop on error
+    //           }
+    //         } else {
+    //           console.error('Unexpected file data type:', fileData);
+    //           // Handle the case where fileData is not a string or ArrayBuffer
+    //         }
+    //       }
+    //     };
+    //     reader.readAsArrayBuffer(currentFile);
+    //   }
 
       // 2: Upload using Axios (existing section)
       const formData = new FormData();
