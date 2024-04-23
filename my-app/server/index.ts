@@ -3,10 +3,10 @@ const path=require('path')
 import express, { Request, Response } from 'express';
 const app = express();
 const cors = require('cors');
-import{ Parse} from './AI-Parsing'
+import{ Parse} from './utils functions/AI-Parsing'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, newSearch} from './search'
+import {searchDatabase, convertText, saveSearch, newSearch, searchAgain, saveSearchAgain, getSearches, getResumeInfo, getSearchRequirement, getSearchResult} from './search'
 import ExtractText from './Extract-Text/extract_text'
 
 
@@ -181,9 +181,69 @@ app.post('/upload', upload.single('CV'),async (req:any,res:any)=>{
     })
 
     app.post('/search-again', async (req: Request, res: Response) => {
-      
+      try {
+        const {searchTitle, limit} = req.body;
+        const searchAgainResult = await searchAgain(searchTitle, limit);
+        res.status(200).json(searchAgainResult);
+      } catch (error) {
+        console.error('Error searching again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
     })
 
+    app.post('/save-search-again', async (req:Request, res: Response) => {
+      try {
+        const {searchTitle, newResults} = req.body;
+        saveSearchAgain(searchTitle, newResults);
+        res.status(200).json({message: 'Search Result succesfully saved'})
+      } catch (error) {
+        console.error('Error saving search again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-searches'), async (req: Request, res: Response) => {
+      try {
+        const searches = await getSearches();
+        res.status(200).json(searches);
+      } catch (error) {
+        console.error('Error getting search titles:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+
+    app.get('/get-search-result', async (req: Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchResults = await getSearchResult(searchID);
+        res.status(200).json(searchResults);
+      } catch (error) {
+        console.error('Error getting search results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-search-requirement', async (req:Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchRequirement = await getSearchRequirement(searchID);
+        res.status(200).json(searchRequirement);
+      } catch (error) {
+        console.error('Error getting search requirements:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-resume-info', async (req:Request, res: Response) => {
+      try {
+        const resumeID = req.body;
+        const resumeInfo = await getResumeInfo(resumeID);
+        res.status(200).json(resumeInfo);
+      } catch (error) {
+        console.error('Error getting resume information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
 
               
 app.listen(4000);

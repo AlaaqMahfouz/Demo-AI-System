@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import {isEmptyString} from './index'
+import {isEmptyString} from '../index'
 /*
 this code takes the extracted content of the inserted CV as a string and parses it into a given JSON format
 the returned formated string is then sent to Supabase by sendToSupabase.ts
@@ -100,7 +100,7 @@ export async function Parse(textToParse: string): Promise<string> {
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
 
-    const prompt = `This is a resume:\n${textToParse}\nPlease parse the information into a JSON format following the structure:\n${jsonTemplate} while replacing all null values with empty strings`;
+    const prompt = `This is a resume:\n${textToParse}\nPlease parse the information into a JSON format following the structure:\n${jsonTemplate} while making sure that all missing information are set to null`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
