@@ -14,7 +14,7 @@ const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult} from './search'
+import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult, getSearchRequirement} from './search'
 // express cors
 app.use(cors())
 app.use(bodyParser.json());
@@ -414,6 +414,17 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
         res.status(200).json(searchResults);
       } catch (error) {
         console.error('Error getting search results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-search-requirement', async (req:Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchRequirement = await getSearchRequirement(searchID);
+        res.status(200).json(searchRequirement);
+      } catch (error) {
+        console.error('Error getting search requirements:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
     })
