@@ -15,11 +15,11 @@ const SearchRecordList: React.FC = () => {
     useEffect(() => {
       const getSearches = async () => {
         try {
-          const response = await axios.get<SearchRecord[]>('/api/searches');
+          const response = await axios.get<SearchRecord[]>('http://localhost:4000/get-searches');
           if (response.status === 200) {
             setSearches(response.data);
           } else {
-            throw new Error('Failed to fetch searches');
+            throw new Error('Failed to get searches from backend');
           }
         } catch (error) {
           console.error(error);

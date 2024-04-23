@@ -14,7 +14,7 @@ const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult, getSearchRequirement} from './search'
+import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult, getSearchRequirement, saveSearchAgain} from './search'
 // express cors
 app.use(cors())
 app.use(bodyParser.json());
@@ -390,11 +390,25 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
     })
 
     app.post('/search-again', async (req: Request, res: Response) => {
-      
+      try {
+        const {searchTitle, limit} = req.body;
+        const searchAgainResult = await searchAgain(searchTitle, limit);
+        res.status(200).json(searchAgainResult);
+      } catch (error) {
+        console.error('Error searching again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
     })
 
     app.post('/save-search-again', async (req:Request, res: Response) => {
-      
+      try {
+        const {searchTitle, newResults} = req.body;
+        saveSearchAgain(searchTitle, newResults);
+        res.status(200).json({message: 'Search Result succesfully saved'})
+      } catch (error) {
+        console.error('Error saving search again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
     })
 
     app.get('/get-searches'), async (req: Request, res: Response) => {
