@@ -2,13 +2,17 @@
 
 import React, { use, useRef, useState } from 'react';
 import axios from 'axios';
+
 import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
-const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); // Create Supabase client instance, values are from .env.local
+const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); //values in env.local
+
 
 interface FileUploadProps {
   onClose: () => void;
 }
+
+
 
 const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const [file, setCvFile] = useState<File | null>(null);
@@ -30,93 +34,43 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
       setUploadError('Please select at least one file to upload.');
       return;
     }
-
+    const formData = new FormData();
+    
+    if (file) {
+      formData.append('CV', file);
+    }
+    if (otherFiles) {
+      for (let i = 0; i < otherFiles.length; i++) {
+        formData.append('otherFiles', otherFiles[i]);
+      }
+    }
+     
     try {
-      // 1: Upload using Supabase (new section)
-      for (let i = 0; i < (file ? 1 : 0) + (otherFiles?.length || 0); i++) {
-        const currentFile = i === 0 ? file : otherFiles?.item(i - 1);
-        if (!currentFile) continue;
-
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-          if (event.target) {
-            const fileData = event.target.result;
-            if (typeof fileData === 'string' || fileData instanceof ArrayBuffer) {
-              const filename = currentFile.name;
-              const contentType = currentFile.type;
-
-              try {
-                const { data, error } = await supabase
-                  .storage
-                  .from('Supporting Docs') // Use your bucket name here
-                  .upload(filename, fileData, {
-                    contentType,
-                  });
-
-                if (error) {
-                  console.error('Error uploading file:', error);
-                  setUploadError('An error occurred during upload. Please try again.');
-                  return; // Exit the loop on error
-                }
-
-                console.log('File uploaded:', data);
-              } catch (error) {
-                console.error('Error uploading file:', error);
-                setUploadError('An error occurred during upload. Please try again.');
-                return; // Exit the loop on error
-              }
-            } else {
-              console.error('Unexpected file data type:', fileData);
-              // Handle the case where fileData is not a string or ArrayBuffer
-            }
-          }
-        };
-        reader.readAsArrayBuffer(currentFile);
-      }
-
-      // 2: Upload using Axios (existing section)
-      const formData = new FormData();
-
-      if (file) {
-        formData.append('CV', file);
-      }
-
-      if (otherFiles) {
-        for (let i = 0; i < otherFiles.length; i++) {
-          formData.append('otherFiles', otherFiles[i]);
+      const response = await axios.post<any>( // Update response type based on server response
+        'http://localhost:4000/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Required header for file uploads
+          },
         }
-      }
-
-      try {
-        const response = await axios.post<any>( // Update response type based on server response
-          'http://localhost:4000/upload',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data', // Required header for file uploads
-            },
-          }
-        );
-
-        console.log('Files uploaded:', response.data);
-        onClose(); // Close the popup after successful upload
-      } catch (error) {
-        console.error('Error uploading files:', error);
-        setUploadError('An error occurred during upload. Please try again.');
-      }
+      );
+      console.log('Files uploaded:', response.data);
+      
+      onClose(); // Close the popup after successful upload
     } catch (error) {
       console.error('Error uploading files:', error);
       setUploadError('An error occurred during upload. Please try again.');
     }
-
   };
 
-  const otherFilesHandle = useRef<HTMLInputElement>(null);
+  const otherFilesHandle = useRef<HTMLInputElement>(null); 
 
   // Check if at least one file (CV or other) is selected for disabling the upload button
   const hasSelectedFiles = file || (otherFiles && otherFiles.length > 0);
 
-  return (
+
+  return ( 
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex justify-center items-center">
       <div className="bg-white rounded-lg p-4 shadow-md">
         <h5 className="text-center text-xl font-medium mb-4">Upload CV</h5>
@@ -165,6 +119,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
       </div>
     </div>
   );
+ 
 };
 
 export default FileUpload;

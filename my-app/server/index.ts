@@ -70,14 +70,14 @@ const upload = multer({storage : storage})
 // }),
 
 // handling request
-app.post('/upload', upload.fields([{ name: 'CV' } ,{name:'otherFiles'}]),async (req:any,res:any)=>{
+app.post('/upload', upload.single('CV'),async (req:any,res:any)=>{
 
   console.log('hi')
   let file =  req.files['CV'];
 
   console.log("FIle:" +file)
 
-  let supportingFiles = req.files['otherFiles']
+  // let supportingFiles = req.files['otherFiles']
 
   console.log
 
@@ -176,7 +176,7 @@ app.post('/upload', upload.fields([{ name: 'CV' } ,{name:'otherFiles'}]),async (
           // parse text into a structured JSON template 
         const parsedCV = await Parse(finalText);
         //sending the extracted data from the uploaded CV to supabase database
-        await sendToSupabase(parsedCV,supportingFiles);
+        await sendToSupabase(parsedCV);
         console.log("Parsed text is : ", parsedCV)
 
         res.json(parsedCV);
