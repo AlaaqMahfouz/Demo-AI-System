@@ -14,7 +14,7 @@ const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, searchAgain, newSearch} from './search'
+import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult} from './search'
 // express cors
 app.use(cors())
 app.use(bodyParser.json());
@@ -394,6 +394,41 @@ async function handleAllPdfs(){ // handle scanned/text pdfs
       
     })
 
+    app.post('/save-search-again', async (req:Request, res: Response) => {
+      
+    })
+
+    app.get('/get-searches'), async (req: Request, res: Response) => {
+      try {
+        const searches = await getSearches();
+        res.status(200).json(searches);
+      } catch (error) {
+        console.error('Error getting search titles:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+
+    app.get('/get-search-result', async (req: Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchResults = await getSearchResult(searchID);
+        res.status(200).json(searchResults);
+      } catch (error) {
+        console.error('Error getting search results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-resume-info', async (req:Request, res: Response) => {
+      try {
+        const resumeID = req.body;
+        const resumeInfo = await getResumeInfo(resumeID);
+        res.status(200).json(resumeInfo);
+      } catch (error) {
+        console.error('Error getting resume information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
 
               
 app.listen(4000);

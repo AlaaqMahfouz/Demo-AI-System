@@ -9,7 +9,8 @@ import { createClient } from "@supabase/supabase-js";
     -newSearch: call searchDatabase for the 1st time
     -saveSearch: stores the search requirements and the search result in the database
     -searchAgain: returns search results not previously given  
-    -saveAgain: updates the search result array in the database after searching again
+    -saveSearchAgain: updates the search result array in the database after searching again
+    -getSearches: returns all the search titles saved in the database
 */
 
 //convertText takes the search string text and converts it into a structured JSON object defined inside the code
@@ -158,21 +159,7 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
       }
     }
 
-    //from the resume table we select the rows of the resumes that matches the search requirements 
-    //we make sure to limit the number of selected rows to the desired number of results and we order ascendently by their IDs
-    const {data , error} = await client.from('resumes').select('resumeID, name').in('resumeID',selectedResumes).limit(inputNumber).order('resumeID');
-    if(error){
-      //error handeling
-      console.error('Error selecting resumes: ',error);
-      return [];
-    }else{
-      console.log('Successfully selecting resumes');
-      data.forEach(element => {
-        console.log(" Resumes found :" +element.name)
-      });
-      //data is an array of JSON objects with the keys being 
-      return data;
-    }
+    return getResumes(selectedResumes, inputNumber);
   } catch (error) {
     console.error('Error searching through the database:', error);
     return [];
@@ -275,6 +262,7 @@ export async function searchAgain(searchTitle: string, inputNumber: number): Pro
   }
 }
 
+//saveSearchAgain: updates the search result array in the database after searching again
 export async function saveSearchAgain(searchTitle: string, newResults: number[]) {
   try {
     // Initialize Supabase client
@@ -304,6 +292,102 @@ export async function saveSearchAgain(searchTitle: string, newResults: number[])
 
   } catch (error) {
     console.error('Error saving search again:', error);
+  }
+}
+
+//getSearches: returns all the search titles and searches' IDs saved in the database from newest to oldest
+export async function getSearches(): Promise<any[]> {
+  try {
+    // Initialize Supabase client
+    const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+    
+    //query to select all the searchID and title from table searches in database
+    const {data, error} = await client.from('searches').select('searchID, title').order('dateOfCreation', {ascending: false});
+    if (error) {
+      //error handeling
+      console.error('Error getting searches: ',error);
+      return [];
+    } else {
+      if (data != null) {
+        return data
+      }
+      return []
+    }
+  } catch (error) {
+    console.error('Error getting saved searches:', error);
+    return []
+  }
+}
+
+//getResumeInfo: returns the parsed resumeInfo
+export async function getResumeInfo(resumeID: number): Promise<string> {
+  try {
+    // Initialize Supabase client
+    const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+    
+    let resumeInfo: string = ``;
+    //query to select resume info from resumes tables
+    const {data, error} = await client.from('resumes').select('resumeInfo').eq('resumeID', resumeID).single();
+    if (error) {
+      //error handeling
+      console.error('Error getting searches: ',error);
+      return '';
+    } else {
+      resumeInfo = data.resumeInfo;
+      return resumeInfo;
+    }
+  } catch (error) {
+    console.error('Error getting resume information:', error);
+    return ''
+  }
+}
+
+//getSearchResult: return the result of the saved search
+export async function getSearchResult(searchID: number): Promise<any[]> {
+  try {
+    // Initialize Supabase client
+    const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+
+    let searchResult: number[] = [];
+    //query to get the result array from searches
+    const {data:selectData, error: selectError} = await client.from('searches').select('searchResult').eq('searchID', searchID).single();
+    if (selectError) {
+      console.error('Error getting search result array: ', selectError.message);
+    } else {
+      searchResult = selectData.searchResult;
+    }
+
+    return getResumes(searchResult, searchResult.length); //call getResumes to return the resumesID and name 
+
+  } catch (error) {
+    console.error('Error getting search results: ', error);
+    return [];
+  }
+  
+}
+
+export async function getResumes(selectedResumes: number[], limit: number): Promise<any[]> {
+  try {
+    // Initialize Supabase client
+    const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+
+    //query to select resumeID and name of the search result
+    const {data , error} = await client.from('resumes').select('resumeID, name').in('resumeID',selectedResumes).limit(limit).order('resumeID');
+    if(error){
+      //error handeling
+      console.error('Error selecting resumes: ',error);
+      return [];
+    }else{
+      console.log('Successfully selecting resumes');
+      data.forEach(element => {
+        console.log(" Resumes found :" +element.name)
+      });
+      //data is an array of JSON objects with the keys being 
+      return data;
+    }
+  } catch (error) {
+    console.error('Error getting resumes: ', error);
+    return []
   }
 }
 
