@@ -23,7 +23,6 @@ let fileName =''
 // path of the uploaded file
 let completeFilePath =''
 
-
 // multer config
 const storage =multer.diskStorage({
   destination:(req:any,file:any,cb:any)=>{
