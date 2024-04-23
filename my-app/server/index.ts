@@ -6,15 +6,24 @@ import express, { Express, Request, Response } from 'express';
 const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
-import{ Parse} from './AI-Parsing'
-import {sendToSupabase} from './sendToSupabase'
+import{ Parse} from './utils functions/AI-Parsing'
+import {sendToSupabase} from './utils functions/sendToSupabase'
+import {convertText} from './utils functions/convertText'
+import {searchDatabase} from './utils functions/searchDatabase'
+import {saveSearch} from './utils functions/saveSearch'
+import {searchAgain} from './utils functions/searchAgain'
+import {newSearch} from './utils functions/newSearch'
+import {getSearches} from './utils functions/getSearches'
+import {getResumeInfo} from './utils functions/getResumeInfo'
+import {getSearchResult} from './utils functions/getSearchResult'
+import {getSearchRequirement} from './utils functions/getSearchRequirement'
+import {saveSearchAgain} from './utils functions/saveSearchAgain'
 import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
 import extractDocImages from './extractImageDoc'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, searchAgain, newSearch, getSearches, getResumeInfo, getSearchResult, getSearchRequirement, saveSearchAgain} from './search'
 // express cors
 app.use(cors())
 app.use(bodyParser.json());
