@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 import {searchDatabase, convertText, saveSearch, newSearch, searchAgain, saveSearchAgain, getSearches, getResumeInfo, getSearchRequirement, getSearchResult} from './search'
 import ExtractText from './Extract-Text/extract_text'
 import {sendToSupabase} from './utils functions/sendToSupabase'
+import {getSearchResultArray} from './utils functions/getSearchResultArray'
 
 
 // express cors
@@ -280,6 +281,17 @@ app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),asyn
         res.status(200).json(resumeInfo);
       } catch (error) {
         console.error('Error getting resume information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    })
+
+    app.get('/get-search-result-array', async (req: Request, res: Response) => {
+      try {
+        const searchID = req.body;
+        const searchResult = await getSearchResultArray(searchID);
+        res.status(200).json(searchResult)
+      } catch (error) {
+        console.error('Error getting search result array:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
     })
