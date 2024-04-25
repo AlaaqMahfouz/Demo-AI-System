@@ -8,7 +8,7 @@ the content of the json object which structures the extracted data is split into
 */
 
 //send to supabase function 
-export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
+export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): Promise<void> {
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
@@ -18,11 +18,11 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
         const {data: selectData, error: selectError} = await client.from('resumes').select('name').eq('resumeInfo', parsedJSON);
         if (selectError) {
           console.error('Error checking if resume is already uploaded and saved in the database: ', selectError);
-          return null; //stop the code
+          return; //stop the code
         } else {
           if (selectData != null) {
             console.error('Error resume already uploaded and saved in the database');
-            return null; //stop the code
+            return; //stop the code
           }
         }
 
@@ -138,7 +138,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
         
     }catch(error){
         console.error('Error sending to the DB:', error);
-        return null;
+        return;
     }
 
 
