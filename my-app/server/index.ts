@@ -6,10 +6,19 @@ const cors = require('cors');
 import{ Parse} from './utils functions/AI-Parsing'
 import * as fsExtra from 'fs-extra'
 const bodyParser = require('body-parser');
-import {searchDatabase, convertText, saveSearch, newSearch, searchAgain, saveSearchAgain, getSearches, getResumeInfo, getSearchRequirement, getSearchResult} from './search'
 import ExtractText from './Extract-Text/extract_text'
 import {sendToSupabase} from './utils functions/sendToSupabase'
 import {getSearchResultArray} from './utils functions/getSearchResultArray'
+import {getResumeInfo} from './utils functions/getResumeInfo'
+import {convertText} from './utils functions/convertText'
+import {getSearches} from './utils functions/getSearches'
+import {getSearchRequirement} from './utils functions/getSearchRequirement'
+import {getSearchResult} from './utils functions/getSearchResult'
+import {newSearch} from './utils functions/newSearch'
+import {saveSearch} from './utils functions/saveSearch'
+import {saveSearchAgain} from './utils functions/saveSearchAgain'
+import {searchAgain} from './utils functions/searchAgain'
+import {searchDatabase} from './utils functions/searchDatabase'
 
 
 // express cors
