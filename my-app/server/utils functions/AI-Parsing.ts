@@ -15,149 +15,149 @@ export async function Parse(textToParse: string): Promise<string> {
     return '';
   }
 
-//   const jsonTemplate: string =
-//    "{
-//     'name' : '' ,
-//     "phoneNumbers": [
-//       {
-//         "phoneNumber": ""
-//       }
-//     ],
-//     "websites": [
-//       {
-//         "url": ""
-//       }
-//     ],
-//     "emails": [
-//       {
-//         "email": ""
-//       }
-//     ],
-//     "dateOfBirth": "",
-//     "addresses": [
-//       {
-//         "street": "",
-//         "city": "",
-//         "state": "",
-//         "zip": "",
-//         "country": ""
-//       }
-//     ],
-//     "summary": "",
-//     "education": [
-//       {
-//         "school": "",
-//         "degree": "",
-//         "fieldOfStudy": "",
-//         "startDate": "",
-//         "endDate": ""
-//       }
-//     ],
-//     "workExperience": [
-//       {
-//         "company": "",
-//         "position": "",
-//         "startDate": "",
-//         "endDate": ""
-//       }
-//     ],
-//     "projects": [
-//       {
-//         "projectName": "",
-//         "languages": "",
-//         "startDate": "",
-//         "endDate": ""
-//       }
-//     ],
-//     "skills": [
-//       {
-//         "skillName": ""
-//       }
-//     ],
-//     "certifications": [
-//       {
-//         "certificationName": ""
-//       }
-//     ],
-//     "languages": [
-//       {
-//         "languageName": "",
-//         "proficiency": ""
-//       }
-//     ]
-// }";
+  const jsonTemplate: string =
+   `{
+    'name' : '' ,
+    "phoneNumbers": [
+      {
+        "phoneNumber": ""
+      }
+    ],
+    "websites": [
+      {
+        "url": ""
+      }
+    ],
+    "emails": [
+      {
+        "email": ""
+      }
+    ],
+    "dateOfBirth": "",
+    "addresses": [
+      {
+        "street": "",
+        "city": "",
+        "state": "",
+        "zip": "",
+        "country": ""
+      }
+    ],
+    "summary": "",
+    "education": [
+      {
+        "school": "",
+        "degree": "",
+        "fieldOfStudy": "",
+        "startDate": "",
+        "endDate": ""
+      }
+    ],
+    "workExperience": [
+      {
+        "company": "",
+        "position": "",
+        "startDate": "",
+        "endDate": ""
+      }
+    ],
+    "projects": [
+      {
+        "projectName": "",
+        "languages": "",
+        "startDate": "",
+        "endDate": ""
+      }
+    ],
+    "skills": [
+      {
+        "skillName": ""
+      }
+    ],
+    "certifications": [
+      {
+        "certificationName": ""
+      }
+    ],
+    "languages": [
+      {
+        "languageName": "",
+        "proficiency": ""
+      }
+    ]
+}`;
 
-const jsonTemplate: string = 
-  '{' +
-  '"name": "",' +
-  '"phoneNumbers": [' +
-    '{' +
-      '"phoneNumber": ""' +
-    '}' +
-  '],' +
-  '"websites": [' +
-    '{' +
-      '"url": ""' +
-    '}' +
-  '],' +
-  '"emails": [' +
-    '{' +
-      '"email": ""' +
-    '}' +
-  '],' +
-  '"dateOfBirth": "",' +
-  '"addresses": [' +
-    '{' +
-      '"street": "",' +
-      '"city": "",' +
-      '"state": "",' +
-      '"zip": "",' +
-      '"country": ""' +
-    '}' +
-  '],' +
-  '"summary": "",' +
-  '"education": [' +
-    '{' +
-      '"school": "",' +
-      '"degree": "",' +
-      '"fieldOfStudy": "",' +
-      '"startDate": "",' +
-      '"endDate": ""' +
-    '}' +
-  '],' +
-  '"workExperience": [' +
-    '{' +
-      '"company": "",' +
-      '"position": "",' +
-      '"startDate": "",' +
-      '"endDate": ""' +
-    '}' +
-  '],' +
-  '"projects": [' +
-    '{' +
-      '"projectName": "",' +
-      '"languages": "",' +
-      '"startDate": "",' +
-      '"endDate": ""' +
-    '}' +
-  '],' +
-  '"skills": [' +
-    '{' +
-      '"skillName": ""' +
-    '}' +
-  '],' +
-  '"certifications": [' +
-    '{' +
-      '"certificationName": ""' +
-    '}' +
-  '],' +
-  '"languages": [' +
-    '{' +
-      '"languageName": "",' +
-      '"proficiency": ""' +
-    '}' +
-  ']' +
-'}';
+// const jsonTemplate: string = 
+//   '{' +
+//   '"name": "",' +
+//   '"phoneNumbers": [' +
+//     '{' +
+//       '"phoneNumber": ""' +
+//     '}' +
+//   '],' +
+//   '"websites": [' +
+//     '{' +
+//       '"url": ""' +
+//     '}' +
+//   '],' +
+//   '"emails": [' +
+//     '{' +
+//       '"email": ""' +
+//     '}' +
+//   '],' +
+//   '"dateOfBirth": "",' +
+//   '"addresses": [' +
+//     '{' +
+//       '"street": "",' +
+//       '"city": "",' +
+//       '"state": "",' +
+//       '"zip": "",' +
+//       '"country": ""' +
+//     '}' +
+//   '],' +
+//   '"summary": "",' +
+//   '"education": [' +
+//     '{' +
+//       '"school": "",' +
+//       '"degree": "",' +
+//       '"fieldOfStudy": "",' +
+//       '"startDate": "",' +
+//       '"endDate": ""' +
+//     '}' +
+//   '],' +
+//   '"workExperience": [' +
+//     '{' +
+//       '"company": "",' +
+//       '"position": "",' +
+//       '"startDate": "",' +
+//       '"endDate": ""' +
+//     '}' +
+//   '],' +
+//   '"projects": [' +
+//     '{' +
+//       '"projectName": "",' +
+//       '"languages": "",' +
+//       '"startDate": "",' +
+//       '"endDate": ""' +
+//     '}' +
+//   '],' +
+//   '"skills": [' +
+//     '{' +
+//       '"skillName": ""' +
+//     '}' +
+//   '],' +
+//   '"certifications": [' +
+//     '{' +
+//       '"certificationName": ""' +
+//     '}' +
+//   '],' +
+//   '"languages": [' +
+//     '{' +
+//       '"languageName": "",' +
+//       '"proficiency": ""' +
+//     '}' +
+//   ']' +
+// '}';
 
 // console.log(jsonTemplate);
 
@@ -166,7 +166,6 @@ const jsonTemplate: string =
 
   try {
     const generationConfig = {
-      stopSequences: ["red"],
       maxOutputTokens: 1000,
       temperature: 0.9,
       topP: 0.1,

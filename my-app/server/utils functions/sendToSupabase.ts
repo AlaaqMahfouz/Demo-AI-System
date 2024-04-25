@@ -101,19 +101,19 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
               SupportingFilesIds.push(Data?.id)
             });
             
-            const { data , error } = await client.storage
-              .from('Supporting Docs') // Specify the name of your storage bucket
-              .download('Supporting Docs/42.txt'); // Upload the file to the specified path
+            // const { data , error } = await client.storage
+            //   .from('Supporting Docs') // Specify the name of your storage bucket
+            //   .download('Supporting Docs/42.txt'); // Upload the file to the specified path
 
-              if(data!=null)
-              {
-                console.log("Data downloaded :" + data);
-                const ArrayBuffer = await data.arrayBuffer();
-                fs.writeFileSync('./supporting Files/file.txt',Buffer.from(ArrayBuffer))
+              // if(data!=null)
+              // {
+              //   console.log("Data downloaded :" + data);
+              //   const ArrayBuffer = await data.arrayBuffer();
+              //   fs.writeFileSync('./supporting Files/file.txt',Buffer.from(ArrayBuffer))
 
-                const fileInfo = fs.statSync('./supporting Files/file.txt');
-                console.log('File type:', fileInfo.isFile() ? 'File' : 'Directory');
-              }
+              //   const fileInfo = fs.statSync('./supporting Files/file.txt');
+              //   console.log('File type:', fileInfo.isFile() ? 'File' : 'Directory');
+              // }
           }
         console.log("Data successfully sent to Supabase");
 
