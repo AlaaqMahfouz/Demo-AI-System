@@ -14,7 +14,19 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
     
     try{
-        //the Parse function in AI-Parsing2.ts returns a JSON formated string so we should parse it into a JSON object
+        //check if the resume is already uploaded and saved in the database
+        const {data: selectData, error: selectError} = await client.from('resumes').select('name').eq('resumeInfo', parsedJSON);
+        if (selectError) {
+          console.error('Error checking if resume is already uploaded and saved in the database: ', selectError);
+          return null; //stop the code
+        } else {
+          if (selectData != null) {
+            console.error('Error resume already uploaded and saved in the database');
+            return null; //stop the code
+          }
+        }
+
+        //the Parse function in AI-Parsing.ts returns a JSON formated string so we should parse it into a JSON object
         const dataJSON = JSON.parse(parsedJSON);
         
         //array of the top-level keys of the dataJSON object -> array of 13 elements keys=['name', 'phoneNumbers','websites', ...]
@@ -43,7 +55,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
         console.log('Data inserted successfully into resume table:', data);
         }
         //query the resumes table to retrieve the resumeID PK: we need the resumeID value to be added to the rest of the tables for referencing FK
-        const {data: resume_ID, error: resume_IDerr} = await client.from('resumes').select('resumeID').eq('name', resume.name).single();
+        const {data: resume_ID, error: resume_IDerr} = await client.from('resumes').select('resumeID').eq('resumeInfo', resume.resumeInfo).single();
         if (resume_IDerr) {
           console.error('Error fetching ID from resumes table:', resume_IDerr.message);
         } else {
@@ -54,6 +66,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
               "name": "CVname",
               "dateOfBirth": "CVdateOfBirth",
               "summary": "CVsummary",
+              "resumeInfo": parsedJSON,
               "resumeID": resumeID
             }
           */
