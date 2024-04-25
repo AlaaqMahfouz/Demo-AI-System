@@ -20,7 +20,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
           console.error('Error checking if resume is already uploaded and saved in the database: ', selectError);
           return; //stop the code
         } else {
-          if (selectData != null) {
+          if (selectData.length > 0) {
             console.error('Error resume already uploaded and saved in the database');
             return; //stop the code
           }
