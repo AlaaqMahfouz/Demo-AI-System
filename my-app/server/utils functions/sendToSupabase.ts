@@ -21,7 +21,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
           return; //stop the code
         } else {
           if (selectData != null) {
-            console.error('Error resume already uploaded and saved in the database');
+            console.error('Error resume already uploaded and saved in the database', selectData);
             return; //stop the code
           }
         }
