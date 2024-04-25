@@ -66,7 +66,6 @@ export async function convertText(searchString:string): Promise<string> {
       
     try {
         const generationConfig = {
-            stopSequences: ["red"],
             maxOutputTokens: 1000,
             temperature: 0.9,
             topP: 0.1,
