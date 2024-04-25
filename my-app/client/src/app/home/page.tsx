@@ -11,7 +11,7 @@ import SearchForm from "../components/newSearch";
 
 import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
-// const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); //values in env.local
+const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); //values in env.local
 
 
 export default function Home(){
