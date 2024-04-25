@@ -15,7 +15,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
     
     try{
         //check if the resume is already uploaded and saved in the database
-        const {data: selectData, error: selectError} = await client.from('resumes').select('name').eq('resumeInfo', parsedJSON);
+        const {data: selectData, error: selectError} = await client.from('resumes').select('name').eq('resumeInfo', parsedJSON).single();
         if (selectError) {
           console.error('Error checking if resume is already uploaded and saved in the database: ', selectError);
           return; //stop the code
