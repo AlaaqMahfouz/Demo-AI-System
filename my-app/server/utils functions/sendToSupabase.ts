@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
-
+import fs from 'fs'
+import {v4 as uuidv4} from 'uuid'
+import { arrayBuffer } from "stream/consumers";
 /*
 sendToSupabase function handles storing the extracted data from the uploaded cv into the supabase database 
 the content of the json object which structures the extracted data is split into multiple tables and not stored in a single table. 
 */
 
 //send to supabase function 
-export async function sendToSupabase(parsedJSON: string) {
+export async function sendToSupabase(parsedJSON: string ,supportingFiles:any) {
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
@@ -77,6 +79,42 @@ export async function sendToSupabase(parsedJSON: string) {
               }
           }
         }
+
+        if(supportingFiles!=null)
+          {
+            
+            let SupportingFilesIds :string[] =[];
+            
+            supportingFiles.forEach(async (file:any) => {
+              
+              console.log("FIle to be uploaded :" + file)
+              let fileType=determineFileType(file.originalname);
+              const extension =  file?.originalname.split('.').pop()?.toLowerCase() || '';
+              let path =  resume.resumeID + '/' + uuidv4();
+              const fileData = fs.readFileSync(file.path)
+              const { data , error } = await client.storage
+              .from('Supporting Docs') // Specify the name of your storage bucket
+              .upload(path, fileData,{ contentType: fileType}); // Upload the file to the specified path
+
+              let Data = data as  { path: string; id: string; fullPath: string };
+              console.log("data after send to supabase " + Data?.id);
+              SupportingFilesIds.push(Data?.id)
+            });
+            
+            const { data , error } = await client.storage
+              .from('Supporting Docs') // Specify the name of your storage bucket
+              .download('Supporting Docs/42.txt'); // Upload the file to the specified path
+
+              if(data!=null)
+              {
+                console.log("Data downloaded :" + data);
+                const ArrayBuffer = await data.arrayBuffer();
+                fs.writeFileSync('./supporting Files/file.txt',Buffer.from(ArrayBuffer))
+
+                const fileInfo = fs.statSync('./supporting Files/file.txt');
+                console.log('File type:', fileInfo.isFile() ? 'File' : 'Directory');
+              }
+          }
         console.log("Data successfully sent to Supabase");
 
 
@@ -87,9 +125,27 @@ export async function sendToSupabase(parsedJSON: string) {
         
     }catch(error){
         console.error('Error sending to the DB:', error);
+        return null;
     }
 
 
 }
-
+function determineFileType(fileName: string): string {
+  const fileExtension = fileName.split('.').pop()?.toLowerCase();
+  switch (fileExtension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+          return 'image/' + fileExtension;
+      case 'pdf':
+          return 'application/pdf';
+      case 'doc':
+      case 'docx':
+          return 'application/msword';
+      // Add more cases as needed for other file types
+      default:
+          return 'application/octet-stream'; // Default content type for unknown file types
+  }
+}
 

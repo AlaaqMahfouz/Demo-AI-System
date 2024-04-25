@@ -7,7 +7,7 @@ import express, { Express, Request, Response } from 'express';
 const app = express();
 const cors = require('cors');
 const  fs = require('fs').promises;
-import{ Parse} from '../AI-Parsing'
+import{ Parse} from '../utils functions/AI-Parsing'
 import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
@@ -24,7 +24,9 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
     completeFilePath=path;
 
-    console.log("begin extracting text from :" +file.originalname)
+    console.log("begin extracting text from :" +file.originalname + "located at " + completeFilePath)
+
+    
     
     const ImageExtensions = ['png', 'jpg', 'jpeg'];
     const docExtensions = ['doc' , 'docx'];
@@ -89,7 +91,13 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
       console.log("this is a pdf file ");
 
-      finalText =await handleAllPdfs()
+      try{
+        finalText =await handleAllPdfs()
+
+      }catch(error)
+      {
+        console.log("error while parsing from a pdf :",error)
+      }
 
     }
     else{
@@ -192,7 +200,7 @@ export async function docxToHtml(): Promise<string> { // handle doc files with m
                     let TextExtracted : string[] = [];
                     
                     const outputImages = await convert(completeFilePath,{ // convert pdf to image
-                      scale:3, // specify scale for better image's resolution
+                      scale:2, // specify scale for better image's resolution
                     });
                     
                     const imagePaths = outputImages.map(async(image, i) => {
