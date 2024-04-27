@@ -18,13 +18,15 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  /* background: linear-gradient(
+  background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb)); */
-    background-image: url('../image/5590457.jpg');
+    rgb(var(--background-start-rgb));
+    font-family: monospace;
+    background-size: cover;
+    background-image: url('../image/16392116_5701776.jpg') ;
 }
 
 @layer utilities {
@@ -39,12 +41,13 @@ body {
   }
 }
 
-.sidebar {
-  z-index: 2;
+.headBand {
+  z-index: 3;
 }
 
-.searchbar {
-  z-index: 1;
+.sidebar {
+  z-index: 2;
+  height: calc(100vh - 64px);
 }
 
 .outer-container {

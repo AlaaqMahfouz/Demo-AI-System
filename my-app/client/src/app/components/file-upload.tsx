@@ -1,7 +1,9 @@
-'use client'
+'use client';
 
 import React, { use, useRef, useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 interface FileUploadProps {
   onClose: () => void;
@@ -11,6 +13,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const [file, setCvFile] = useState<File | null>(null);
   const [otherFiles, setOtherFiles] = useState<FileList | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false); // State for upload progress
+  const [isUploading, setIsUploading] = useState(false); // State to prevent multiple clicks
 
   const handleCvChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCvFile(event.target.files?.[0] ?? null);
@@ -21,57 +25,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   };
 
   const handleUpload = async () => {
+    if (isUploading) return;
+
     setUploadError(null); // Clear previous error messages
+    setUploading(true); // Set uploading state to true
+    setIsUploading(true); // Set uploading flag to prevent further clicks
 
     if (!file && !otherFiles?.length) {
       setUploadError('Please select at least one file to upload.');
+      setUploading(false); // Reset uploading state on error
+      setIsUploading(false); // Reset uploading flag
       return;
     }
 
     try {
-    //   // 1: Upload using Supabase (new section)
-    //   for (let i = 0; i < (file ? 1 : 0) + (otherFiles?.length || 0); i++) {
-    //     const currentFile = i === 0 ? file : otherFiles?.item(i - 1);
-    //     if (!currentFile) continue;
-
-    //     const reader = new FileReader();
-    //     reader.onload = async (event) => {
-    //       if (event.target) {
-    //         const fileData = event.target.result;
-    //         if (typeof fileData === 'string' || fileData instanceof ArrayBuffer) {
-    //           const filename = currentFile.name;
-    //           const contentType = currentFile.type;
-
-    //           try {
-    //             const { data, error } = await supabase
-    //               .storage
-    //               .from('Supporting Docs') // Use your bucket name here
-    //               .upload(filename, fileData, {
-    //                 contentType,
-    //               });
-
-    //             if (error) {
-    //               console.error('Error uploading file:', error);
-    //               setUploadError('An error occurred during upload. Please try again.');
-    //               return; // Exit the loop on error
-    //             }
-
-    //             console.log('File uploaded:', data);
-    //           } catch (error) {
-    //             console.error('Error uploading file:', error);
-    //             setUploadError('An error occurred during upload. Please try again.');
-    //             return; // Exit the loop on error
-    //           }
-    //         } else {
-    //           console.error('Unexpected file data type:', fileData);
-    //           // Handle the case where fileData is not a string or ArrayBuffer
-    //         }
-    //       }
-    //     };
-    //     reader.readAsArrayBuffer(currentFile);
-    //   }
-
-      // 2: Upload using Axios (existing section)
       const formData = new FormData();
 
       if (file) {
@@ -97,15 +64,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
 
         console.log('Files uploaded:', response.data);
         onClose(); // Close the popup after successful upload
+        setIsUploading(false); // Reset uploading flag
       } catch (error) {
         console.error('Error uploading files:', error);
         setUploadError('An error occurred during upload. Please try again.');
+        setIsUploading(false); // Reset uploading flag
+      } finally {
+        setUploading(false); // Reset uploading state regardless of success or error
       }
     } catch (error) {
       console.error('Error uploading files:', error);
       setUploadError('An error occurred during upload. Please try again.');
+      setUploading(false); // Reset uploading state on error
+      setIsUploading(false); // Reset uploading flag
     }
-
   };
 
   const otherFilesHandle = useRef<HTMLInputElement>(null);
@@ -114,50 +86,61 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const hasSelectedFiles = file || (otherFiles && otherFiles.length > 0);
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg p-4 shadow-md">
-        <h5 className="text-center text-xl font-medium mb-4">Upload CV</h5>
+    <div className="fixed bg-opacity-75 inset-0 z-50 flex justify-center items-center">
+      <div className="bg-gray-300 rounded-lg p-4 shadow-md">
+        <h5 className="text-center text-3xl text-blue-900 font-medium mb-4">Upload CV</h5>
         <div>
-          <label htmlFor="file" className="block mb-2 text-sm font-medium">
+          <label htmlFor="file" className="block mb-2 text-sm text-blue-900 font-medium">
             CV Upload (Single File)
           </label>
           <input
             type="file"
             id="file"
             name="CV"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            required
+            className="block w-full p-3 border border-gray-500 bg-gray-100 rounded-lg focus:outline-none focus:ring-blue-800 focus:border-blue-800"
             onChange={handleCvChange}
           />
           {file && <p className="mt-2 text-gray-600">{file.name}</p>}
         </div>
         <div className="mt-4">
-          <label htmlFor="otherFiles" className="block mb-2 text-sm font-medium">
+          <label htmlFor="otherFiles" className="block mb-2 text-sm text-blue-900 font-medium">
             Supporting Documents (Multiple Files)
           </label>
           <input
             type="file"
             id="otherFiles"
-            className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="block w-full p-3 border border-gray-500 bg-gray-100 rounded-lg focus:outline-none focus:ring-blue-800 focus:border-blue-800"
             onChange={handleOtherFilesChange}
             multiple
             ref={otherFilesHandle}
           />
         </div>
         {uploadError && <p className="text-red-500 text-sm mb-2">{uploadError}</p>}
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-center mt-4">
           <button
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-lg mr-2"
+            className="p-3 w-36 m-4 rounded-full bg-gray-500 text-white hover:bg-gray-700 focus:outline-none"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
-            className="dark:bg-indigo-500 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg"
-            onClick={handleUpload}
-            disabled={!hasSelectedFiles} // Disable upload button if no file selected
-          >
-            Upload
-          </button>
+          className="w-36 m-4 p-3 bg-blue-800 hover:bg-blue-900 text-white font-medium py-2 px-4 rounded-full"
+          onClick={handleUpload}
+          disabled={!hasSelectedFiles || isUploading}
+        >
+          {uploading ? (
+            <div>
+              <div className="flex items-center justify-center">
+                <span>Uploading...</span>
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" />
+              </div>
+              
+            </div>
+          ) : (
+            'Upload'
+          )}
+        </button>
         </div>
       </div>
     </div>

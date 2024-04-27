@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import Headband from "../components/headband";
-import SearchBar from "../components/searchBar";
 import Sidebar from "../components/sidebar";
 import Welcome from "../components/welcome";
 import FileUpload from "../components/file-upload";
-import newSearch from "../components/newSearch";
-import SearchForm from "../components/newSearch";
+import Link from "next/link";
 
 // import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
@@ -19,12 +17,8 @@ export default function Home(){
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFileUploadOpen, setIsFileUploadOpen] = useState(false);
 
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
-
     const openFileUpload = () => setIsFileUploadOpen(true);
     const closeFileUpload = () => setIsFileUploadOpen(false);
-
-    const openSearch = () => setIsSearchOpen(true);
 
     return(
         <div className="grid h-3/4">
@@ -38,51 +32,45 @@ export default function Home(){
                 {/* {isSearchOpen && <SearchForm isSearchOpen={isSearchOpen} />} */}
             </div>
             <div className={` ${ isSidebarOpen ? "sm:ml-56" : "" }  justify-self-center mt-20`}>
-                <div >
-
-                
-                {/* <Welcome/> */}
-                <div className="max-w-screen-xl mx-auto items-center">
-                <p className="text-black text-center text-6xl ">
-                    AI
-                </p>
-                <p className="text-black text-center text-4xl">
-                    Recruitment System
-                </p>
-                <p className="text-center"> _________________________________________________________________ </p>
-                <p className="p-12 text-black text-center pt-7 pb-10 sm:text-base text-xs h-min max-w-2xl">
-                    Faster and more efficient way to recruit your desired candidates based on the desired qualifications.<br/>upload a new CV or search for an existing one.
-                </p>
-            </div>
-            <div className="flex flex-row justify-evenly mt-10">
-
-                <div className="button-container">
-                    <button 
-                        className="dark:bg-indigo-500 hover:bg-indigo-600 text-black font-bold h-min w-15 py-2 px-4 rounded-full"
-                        onClick={openFileUpload}
-                        >
-                        Upload CV
-                    </button>
-                </div>
-
-                <div className="button-container">
-                    <button 
-                        className="dark:bg-indigo-500 hover:bg-indigo-600 text-black font-bold h-min w-min py-2 px-4 rounded-full"
-                        onClick={openSearch}
-                        >
-                        Search
-                    </button>
-                </div>
-             </div>
-                
-                {isFileUploadOpen && <FileUpload onClose={closeFileUpload} />}
-                {/* <SearchBar/> */}
+                <div>
+                    <Welcome/>
+                    <div className="flex sm:flex-row flex-col justify-evenly mt-10">
+                        <div className="button-container">
+                            <button 
+                                className="flex m-4 w-64 justify-center bg-gray-200 hover:bg-blue-900 text-lg text-blue-900 hover:text-white shadow-lg shadow-gray-500 border-blue-800 border-2 hover:border-1 font-extrabold h-min w-15 py-3 px-4 rounded-full"
+                                onClick={openFileUpload}
+                                >
+                                Upload CV
+                                <div className="p-1 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg className="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                                    <path d="m8 8 4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 4v12M19 17v.6c0 1.33-1.07 2.4-2.4 2.4H7.4C6.07 20 5 18.93 5 17.6V17" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                </svg>
+                                </div>
+                            </button>
+                        </div>
+                        <div className="button-container">
+                            <Link href="/newSearch" passHref>
+                                <button 
+                                    className="flex m-4 w-64 justify-center text-lg bg-gray-200 hover:bg-blue-900 text-blue-900 hover:text-white shadow-lg shadow-gray-500 border-blue-800 border-2 hover:border-1 font-extrabold h-min w-15 py-3 px-4 rounded-full"
+                                    >
+                                    Create New Search
+                                    <div className="p-1 ps-3 inset-y-0 start-0 flex items-center pointer-events-none">
+                                        <svg className="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                    {isFileUploadOpen && <FileUpload onClose={closeFileUpload} />}
                 </div>
             </div>
             {isFileUploadOpen && ( // Render FileUpload only when open
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50">
-            <FileUpload onClose={closeFileUpload} />
-            </div>
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50">
+                    <FileUpload onClose={closeFileUpload} />
+                </div>
             )}
         </div>
     );

@@ -11,8 +11,8 @@ export default async function Login() {
   
   if (!user){
     return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <Link href={'/login'} className='bg-indigo-500 hover:bg-indigo-600 rounded-full text-white p-5'>
+      <main className="bg-gray-300 flex min-h-screen flex-col items-center justify-center p-24">
+        <Link href={'/login'} className='bg-blue-800 hover:bg-blue-900 rounded-full text-white p-5'>
           You are not logged in.<br></br> <b>CLICK HERE</b> to go login.
         </Link>
       </main>
