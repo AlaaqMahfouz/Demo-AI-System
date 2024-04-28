@@ -3,19 +3,17 @@ import { searchDatabase } from './searchDatabase';
 
 //this function generate new search results to a previous search 
 //for the same search requirements it select resumes not previously selected
-export async function searchAgain(searchTitle: string, inputNumber: number): Promise<any[]> {
+export async function searchAgain(searchID: number, inputNumber: number): Promise<any[]> {
     try {
       // Initialize Supabase client
       const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
     
-      let searchID: number = 0;
       let previouslySelectedResumes: number []=[];
       //using the search title passed as parameters to the function we select the searchID 
-      const {data,error} = await client.from('searches').select('searchID, searchResult').eq('title',searchTitle).single()
+      const {data,error} = await client.from('searches').select('searchResult').eq('searchID',searchID).single()
       if (error) {
         console.error('Error selecting searchID: ',error.message)
       } else {
-        searchID = data.searchID;
         previouslySelectedResumes = data.searchResult;
       }
   

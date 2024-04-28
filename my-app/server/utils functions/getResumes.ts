@@ -18,6 +18,11 @@ export async function getResumes(selectedResumes: number[], limit: number): Prom
         });
         //data is an array of JSON objects with the keys being 
         return data;
+        /*const data: {
+            resumeID: any;
+            name: any;
+          }[] 
+        */
       }
     } catch (error) {
       console.error('Error getting resumes: ', error);

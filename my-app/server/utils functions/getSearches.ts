@@ -13,10 +13,9 @@ export async function getSearches(): Promise<any[]> {
         console.error('Error getting searches: ',error);
         return [];
       } else {
-        if (data != null) {
-          return data
-        }
-        return []
+        console.log('Successfully getting searches from db');
+        return data
+        
       }
     } catch (error) {
       console.error('Error getting saved searches:', error);
