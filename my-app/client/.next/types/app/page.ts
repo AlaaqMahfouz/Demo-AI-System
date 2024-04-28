@@ -1,4 +1,4 @@
-// File: D:\GitHub\ai-recruitment-system-interns-ulf2-2024\my-app\client\src\app\page.tsx
+// File: D:\Jane BEYROUTHY\VS Code\AI-Recruitment-System\my-app\client\src\app\page.tsx
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
