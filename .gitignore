@@ -1,6 +1,5 @@
 
-my-app/client/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node
-
+my-app/client/node_modules
 node_modules/
 
 package-lock.json
@@ -15,3 +14,5 @@ logs/
 .cache/
 
 .next/
+
+my-app/server/node_modules
