@@ -78,9 +78,16 @@ export async function convertText(searchString:string): Promise<string> {
       
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const parsedJSON = response.text();
-      
+        let parsedJSON = response.text();
+        const pattern = /^```JSON|^```json/;
+        if(pattern.test(parsedJSON)){
+            console.log("json word detected!")
+            parsedJSON = parsedJSON.replace(/^```json\s*|\s*```$/g, '');
+            parsedJSON = parsedJSON.replace(/^```JSON\s*|\s*```$/g, '');
+        }
+        console.log("parsed text before return it :" + parsedJSON);
         return parsedJSON;
+
       
     } catch (error) {
           console.error('Error converting request:', error);
