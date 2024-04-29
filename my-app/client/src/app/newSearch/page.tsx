@@ -43,7 +43,7 @@ const SearchForm: React.FC = () => {
   const handleSaveSearch = async () => {
     try {
       // Make HTTP POST request to save the search in the database
-      const response = await axios.post('http://localhost:4000/save-search', {
+      const response = await axios.post('/api/save-search', {
         searchTitle,
         structuredSearchString, 
         searchResults // Pass the search results to be saved
