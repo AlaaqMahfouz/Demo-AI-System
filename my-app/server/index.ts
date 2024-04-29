@@ -251,7 +251,7 @@ app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),asyn
       }
     })
 
-    app.get('/get-searches'), async (res: Response) => {
+    app.get('/searches'), async (req: Request, res: Response) => {
       try {
         const searches = await getSearches();
         res.status(200).json(searches);

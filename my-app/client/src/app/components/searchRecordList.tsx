@@ -11,19 +11,15 @@ interface SearchRecord {
 
 const SearchRecordList: React.FC = () => {
 
-  const [searches, setSearches] = useState<any[]>([]);
+  const [searches, setSearches] = useState<SearchRecord[]>([]);
 
   useEffect(() => {
     const getSearches = async () => {
       try {
-        const response = await axios({
-          method: 'get',
-          baseURL:'http://localhost:4000',
-          url: 'get-searches'
-        });
-        console.log(response);
-        setSearches(response.data);
+        const response = await axios.get('http://localhost:4000/searches');
         
+        const searchesList: SearchRecord[] =  await response.data;
+        setSearches(searchesList);
       } catch (error) {
         console.error(error);
       }
