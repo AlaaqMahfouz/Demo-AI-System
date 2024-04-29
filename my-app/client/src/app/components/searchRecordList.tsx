@@ -16,7 +16,7 @@ const SearchRecordList: React.FC = () => {
   useEffect(() => {
     const getSearches = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/searches');
+        const response = await axios.get('http://localhost:4000/get-searches');
         
         const searchesList: SearchRecord[] =  await response.data;
         setSearches(searchesList);
@@ -41,7 +41,7 @@ const SearchRecordList: React.FC = () => {
             </li>
           ))) : (
             <li>
-              <span className="flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900  font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2">
+              <span className="flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 text-blue-900 hover:shadow-xl hover:shadow-blue-900  font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2">
                 0 Saved Searches 
               </span>
             </li>

@@ -25,59 +25,158 @@ import {searchDatabase} from './utils functions/searchDatabase'
 app.use(cors())
 app.use(bodyParser.json());
 
-let fileName =''
-// path of the uploaded file
-let completeFilePath =''
+app.post('/convert-text', async (req:Request, res: Response) => {
+      try {
+        const {searchText} = req.body;
+        const structuredSearchString = await convertText(searchText);
 
-// multer config
-const storage =multer.diskStorage({
-  destination:(req:any,file:any,cb:any)=>{
-    if(file.fieldname==="CV")
-    cb(null,'../client/files')
-    else
-    cb(null,'../client/supporting Files')
-
-    // else
-    // cb(null,'../client/supportingFiles')
-  },
-  filename: (req:any,file:any,cb:any)=>{
-    try {
-      
-      console.log(file)
-      console.log(file.originalname)
-      // Generating Unique name   
-      fileName=Date.now() + path.extname(file.originalname);
-      
-      if(file.fieldname=="CV"){
-      completeFilePath='../client/files/' + fileName
+        res.status(200).json(structuredSearchString);
+      } catch (error) {
+        console.error('Error converting search text:', error);
+        res.status(500).json({ error: 'Internal server error' });
       }
-        console.log("complete file path : " +completeFilePath)
-        cb(null,fileName)
-        
-        console.log("filepath : " , fileName)
-      }catch(error)
-      {
-      console.log("error : " + error)
-    }
-    }
-  })
+})
 
+app.post('/new-search', async (req: Request, res: Response)=>{
+      try {
+        const {structuredSearchString, limit} = req.body;
+        const searchResult = await newSearch(structuredSearchString, limit); //new search
 
-const upload = multer({storage : storage})
+        res.status(200).json(searchResult);
+      } catch (error) {
+        console.error('Error performing new search:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
 
-// const upload = multer({ 
-//   storage: {
-//     fields: [
-//       { name: 'CV', storage: storage },
-//       { name: 'otherFiles', storage: storage }
-//     ]
-//   }
-// });
- 
-// app.get('/upload',upload.single('CV') ,async (req:any,res:any)=>{
+app.post('/save-search', async (req: Request, res: Response) => {
+      try {
+        const {searchTitle, structuredSearchString, searchResults} = req.body;
+        saveSearch(searchTitle, structuredSearchString, searchResults);
 
-//   res.send("image uploaded from get")
-// }),
+        res.status(200).json({message: 'Search Result succesfully saved'})
+      } catch (error) {
+        console.error('Error saving search:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+
+})
+
+app.post('/search-again', async (req: Request, res: Response) => {
+      try {
+        const {searchTitle, limit} = req.body;
+        const searchAgainResult = await searchAgain(searchTitle, limit);
+        res.status(200).json(searchAgainResult);
+      } catch (error) {
+        console.error('Error searching again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.post('/save-search-again', async (req:Request, res: Response) => {
+      try {
+        const {searchTitle, newResults} = req.body;
+        saveSearchAgain(searchTitle, newResults);
+        res.status(200).json({message: 'Search Result succesfully saved'})
+      } catch (error) {
+        console.error('Error saving search again:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.get('/get-searches', async (req: Request, res: Response) => {
+      try {
+        const searches = await getSearches();
+        res.status(200).json(searches);
+      } catch (error) {
+        console.error('Error getting search titles:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.get('/get-search-result', async (req: Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchResults = await getSearchResult(searchID);
+        res.status(200).json(searchResults);
+      } catch (error) {
+        console.error('Error getting search results:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.get('/get-search-requirement', async (req:Request, res: Response) => {
+      try {
+        const {searchID} = req.body;
+        const searchRequirement = await getSearchRequirement(searchID);
+        res.status(200).json(searchRequirement);
+      } catch (error) {
+        console.error('Error getting search requirements:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.get('/get-resume-info', async (req:Request, res: Response) => {
+      try {
+        const resumeID = req.body;
+        const resumeInfo = await getResumeInfo(resumeID);
+        res.status(200).json(resumeInfo);
+      } catch (error) {
+        console.error('Error getting resume information:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+app.get('/get-search-result-array', async (req: Request, res: Response) => {
+      try {
+        const searchID = req.body;
+        const searchResult = await getSearchResultArray(searchID);
+        res.status(200).json(searchResult)
+      } catch (error) {
+        console.error('Error getting search result array:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+})
+
+    let fileName =''
+    // path of the uploaded file
+    let completeFilePath =''
+    
+    // multer config
+    const storage =multer.diskStorage({
+      destination:(req:any,file:any,cb:any)=>{
+        if(file.fieldname==="CV")
+        cb(null,'../client/files')
+        else
+        cb(null,'../client/supporting Files')
+    
+        // else
+        // cb(null,'../client/supportingFiles')
+      },
+      filename: (req:any,file:any,cb:any)=>{
+        try {
+          
+          console.log(file)
+          console.log(file.originalname)
+          // Generating Unique name   
+          fileName=Date.now() + path.extname(file.originalname);
+          
+          if(file.fieldname=="CV"){
+          completeFilePath='../client/files/' + fileName
+          }
+            console.log("complete file path : " +completeFilePath)
+            cb(null,fileName)
+            
+            console.log("filepath : " , fileName)
+          }catch(error)
+          {
+          console.log("error : " + error)
+        }
+        }
+      })
+    
+    
+    const upload = multer({storage : storage})
 
 // handling request
 app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),async (req:any,res:any)=>{
@@ -172,139 +271,11 @@ app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),asyn
       
     }
     });
-
     
-    
-             export function isEmptyString(str: string): boolean {
-                // Use a regular expression to match strings containing only whitespace characters
-                return /^\s*$/.test(str);
-            }
-
-            
-            app.post('/search',async (req:any,res:any)=>{
-      const {data} = req.body;
-      const limit = data.limitNum;
-      console.log("Data :"+data.inputValue);
-      console.log("limit :"+limit);
-        console.log("searching database...");
-        searchDatabase(data.inputValue,data.limitNum, [] ) //new search
-
-      
-    })
-
-    app.post('/convert-text', async (req:Request, res: Response) => {
-      try {
-        const {searchText} = req.body;
-        const structuredSearchString = await convertText(searchText);
-
-        res.status(200).json(structuredSearchString);
-      } catch (error) {
-        console.error('Error converting search text:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.post('/new-search', async (req: Request, res: Response)=>{
-      try {
-        const {structuredSearchString, limit} = req.body;
-        const searchResult = await newSearch(structuredSearchString, limit); //new search
-
-        res.status(200).json(searchResult);
-      } catch (error) {
-        console.error('Error performing new search:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.post('/save-search', async (req: Request, res: Response) => {
-      try {
-        const {searchTitle, structuredSearchString, searchResults} = req.body;
-        saveSearch(searchTitle, structuredSearchString, searchResults);
-
-        res.status(200).json({message: 'Search Result succesfully saved'})
-      } catch (error) {
-        console.error('Error saving search:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-
-    })
-
-    app.post('/search-again', async (req: Request, res: Response) => {
-      try {
-        const {searchTitle, limit} = req.body;
-        const searchAgainResult = await searchAgain(searchTitle, limit);
-        res.status(200).json(searchAgainResult);
-      } catch (error) {
-        console.error('Error searching again:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.post('/save-search-again', async (req:Request, res: Response) => {
-      try {
-        const {searchTitle, newResults} = req.body;
-        saveSearchAgain(searchTitle, newResults);
-        res.status(200).json({message: 'Search Result succesfully saved'})
-      } catch (error) {
-        console.error('Error saving search again:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.get('/searches'), async (req: Request, res: Response) => {
-      try {
-        const searches = await getSearches();
-        res.status(200).json(searches);
-      } catch (error) {
-        console.error('Error getting search titles:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    }
-
-    app.get('/get-search-result', async (req: Request, res: Response) => {
-      try {
-        const {searchID} = req.body;
-        const searchResults = await getSearchResult(searchID);
-        res.status(200).json(searchResults);
-      } catch (error) {
-        console.error('Error getting search results:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.get('/get-search-requirement', async (req:Request, res: Response) => {
-      try {
-        const {searchID} = req.body;
-        const searchRequirement = await getSearchRequirement(searchID);
-        res.status(200).json(searchRequirement);
-      } catch (error) {
-        console.error('Error getting search requirements:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.get('/get-resume-info', async (req:Request, res: Response) => {
-      try {
-        const resumeID = req.body;
-        const resumeInfo = await getResumeInfo(resumeID);
-        res.status(200).json(resumeInfo);
-      } catch (error) {
-        console.error('Error getting resume information:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
-    app.get('/get-search-result-array', async (req: Request, res: Response) => {
-      try {
-        const searchID = req.body;
-        const searchResult = await getSearchResultArray(searchID);
-        res.status(200).json(searchResult)
-      } catch (error) {
-        console.error('Error getting search result array:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    })
-
+export function isEmptyString(str: string): boolean {
+  // Use a regular expression to match strings containing only whitespace characters
+  return /^\s*$/.test(str);
+}
               
 app.listen(4000);
 console.log("running on port 4000");
