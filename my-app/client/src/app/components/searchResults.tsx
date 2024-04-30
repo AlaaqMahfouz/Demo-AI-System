@@ -20,7 +20,7 @@ const SearchResults: React.FC<SearchResultProps> = ({ results }) => {
         ))}
       </div>
       {/* Exapmles */}
-      <div className="flex flex-wrap justify-around">
+      {/* <div className="flex flex-wrap justify-around">
         <div className=''>
             <span className='w-60 cursor-pointer w- flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
               Gebran Nemes<br></br>
@@ -56,7 +56,7 @@ const SearchResults: React.FC<SearchResultProps> = ({ results }) => {
               Dr. Bernadette Wakim<br></br>
             </span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

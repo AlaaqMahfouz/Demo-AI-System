@@ -9,6 +9,8 @@ import {getResumes} from './getResumes';
 //it performs a search query in the database based of this structure and returns an array of the selected resumes as JSON objects
 export async function searchDatabase(structuredSearchString: string, inputNumber: number, previouslySelectedResumes: number[]): Promise<any[]> {
 
+
+  console.log("string for search :" + structuredSearchString);
     if(isEmptyString(structuredSearchString))
       {
           console.error("search is null and couldn't be converted!");
@@ -16,8 +18,14 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
       }
     try {
       //the convertText function returns JSON format as a string so we have to parse it into JSON
+      const pattern = /^```JSON|^```json/;
+      if(pattern.test(structuredSearchString)){
+      console.log("json word detected!")
+      structuredSearchString = structuredSearchString.replace(/^```json\s*|\s*```$/g, '');
+      structuredSearchString = structuredSearchString.replace(/^```JSON\s*|\s*```$/g, '');
+    }
       const searchJSON = JSON.parse(structuredSearchString);
-  
+      
       // Initialize Supabase client
       const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
       

@@ -13,21 +13,21 @@ export async function convertText(searchString:string): Promise<string> {
         console.error("text is null and couldn't be converted!");
         return '';
     }
-  
     const jsonTemplate: string = `{
       "addresses": {
           "city": "",
           "state": "",
           "country": ""
       },
-      "education": 
-          {
-              "school": [""],
-              "degree": [""],
-              "fieldOfStudy": [""],
-              "startDate": "",
-              "endDate": ""
-          }
+        "education": [
+            {
+                "school": [""],
+                "degree": [""],
+                "fieldOfStudy": [""],
+                "startDate": "",
+                "endDate": ""
+            }
+        ]
       ,
       "workExperience": 
           {
@@ -60,8 +60,6 @@ export async function convertText(searchString:string): Promise<string> {
           }
       
   }`;
-    
-      
     const genAI = new GoogleGenerativeAI("AIzaSyBDojqEFTP5MbdXksNPUgh6a1vq84VDIgw"); // config gemini AI 
       
     try {

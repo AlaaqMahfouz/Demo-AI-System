@@ -7,13 +7,17 @@ export async function saveSearch(searchTitle: string, structuredSearchString:str
       
       // Initialize Supabase client
       const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
-
+      console.log("search Data" + JSON.stringify(searchData))
+      console.log("structured string from save search :" + structuredSearchString)
       let search: any={}; //empty JSON object
       search.title = searchTitle; //appending the title to search 
+      search.dateOfCreation = new Date().toLocaleString('en-US', { timeZone: 'Asia/Beirut' })
       let searchResult : number[] = []; //array to store the resume IDs of the search results
       for(const resume of searchData){
-        const keys = Object.keys(searchData); //keys = ['resumeID','name'] 
-        searchResult.push(resume[keys[0]]); //resume[resumeID]
+        // const keys = Object.keys(searchData); //keys = ['resumeID','name'] 
+        // console.log("keys :" +JSON.stringify(keys))
+        console.log("value of first key :" + resume[0])
+        searchResult.push(resume['resumeID']); //resume[resumeID]
       }
       search.searchResult = searchResult; //appending searchResult array to search 
 
@@ -53,4 +57,20 @@ export async function saveSearch(searchTitle: string, structuredSearchString:str
     } catch (error) {
       console.error('Error saving search:', error);
     }
+}
+
+// format date to match the format of Date field of saved search in supabase
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const timezoneOffset = date.getTimezoneOffset();
+  const timezoneOffsetSign = timezoneOffset > 0 ? '-' : '+';
+  const timezoneOffsetHours = Math.abs(Math.floor(timezoneOffset / 60)).toString().padStart(2, '0');
+  const timezoneOffsetMinutes = Math.abs(timezoneOffset % 60).toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}${timezoneOffsetSign}${timezoneOffsetHours}-${timezoneOffsetMinutes}`;
 }
