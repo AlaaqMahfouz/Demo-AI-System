@@ -55,40 +55,8 @@ const SearchRecordList: React.FC = () => {
               </span>
             </li>
           )}
-          
         </ul>
-        {/* example */}
-        {/*<div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>
-        <div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>
-        <div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>
-        <div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>
-        <div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>
-        <div className=''>
-          <span className='cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2'>
-            Software Engineer<br></br>
-          </span>
-        </div>*/}
-        </div>
+      </div>
     );
   };
   

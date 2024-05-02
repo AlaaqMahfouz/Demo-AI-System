@@ -19,6 +19,7 @@ import {saveSearch} from './utils functions/saveSearch'
 import {saveSearchAgain} from './utils functions/saveSearchAgain'
 import {searchAgain} from './utils functions/searchAgain'
 import {searchDatabase} from './utils functions/searchDatabase'
+import { ParsingJsonToHTML } from './utils functions/parsingJsonToHTML';
 
 
 // express cors
@@ -36,6 +37,32 @@ app.post('/convert-text', async (req:Request, res: Response) => {
         res.status(500).json({ error: 'Internal server error' });
       }
 })
+
+app.post('/parsing-JSON-To-HTML', async (req: Request, res: Response) => {
+  try {
+    const { candidateID } = req.body; // Assuming candidateID is sent in the request body
+
+    if (!candidateID) {
+      return res.status(400).json({ error: 'Missing candidate ID in request body' });
+    }
+
+    // Fetch resume information using getResumeInfo function
+    const resumeInfo = await getResumeInfo(candidateID);
+
+    if (!resumeInfo) {
+      return res.status(404).json({ error: 'No resume found for the provided candidate ID' });
+    }
+
+    // Parse the fetched resume information
+    const structuredHTML = await ParsingJsonToHTML(resumeInfo);
+
+    res.status(200).json(structuredHTML);
+  } catch (error) {
+    console.error('Error converting search text:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.post('/new-search', async (req: Request, res: Response)=>{
       try {

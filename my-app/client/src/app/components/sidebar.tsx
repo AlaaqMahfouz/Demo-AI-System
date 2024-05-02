@@ -20,7 +20,6 @@ const Sidebar = (props: { isSidebarOpen: boolean }) => {
                 </Link>
             </nav>
             <hr className="w-44 items-center mx-4 mb-7 mt-9 border-gray-100 border-2" />
-            
             <SearchRecordList/>
         </div>
     </div>
