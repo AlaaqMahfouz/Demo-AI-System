@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 let structuredSearchString:string;
 const SearchForm: React.FC = () => {
@@ -14,15 +15,6 @@ const SearchForm: React.FC = () => {
   const [limit, setLimit] = useState<number>(5);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [savedSearch, setSavedSearch] = useState<boolean>(false); // State to track if search is saved
-
-
-  // useEffect(() => {
-  //   const convertSearchText = async () => {
-     
-  //   };
-
-  //   convertSearchText(); // Call the conversion function when searchText changes
-  // }, [searchText]);
 
   const handleSearch = async (e:FormEvent) => {
 
@@ -58,7 +50,7 @@ const SearchForm: React.FC = () => {
 
   const handleSaveSearch = async () => {
     try {
-      console.log("structured string before sending it to save seearch :" + structuredSearchString)
+      console.log("structured string before sending it to save search :" + structuredSearchString)
       // Make HTTP POST request to save the search in the database
       const response = await axios.post('http://localhost:4000/save-search', {
         searchTitle,
@@ -73,17 +65,11 @@ const SearchForm: React.FC = () => {
     }
   };
 
-  const handleCancel = {
-    handleClick: () => {
-      redirect("/home");
-    },
-};
-
   return (
     <div>
       <GoHomeHeadband/>
       <div className='m-7 font-mono font-bold'>
-        <div className='text-6xl text-blue-900 text-center m-12'>
+        <div className='sm:text-6xl text-5xl text-blue-900 text-center m-12'>
           New Search
         </div>
         <form onSubmit={handleSearch}>
@@ -136,11 +122,12 @@ const SearchForm: React.FC = () => {
 
         {/* Render the "Save" button if search results are present and not already saved */}
         {searchResults.length > 0 && !savedSearch && (
-          <div className='flex flex-row-reverse space-x-4 space-x-reverse mt-7'>
-            <button onClick={handleSaveSearch} className='flex m-4 justify-center text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-min w-15 py-3 px-4 rounded-full'>Save Search</button>
-            <button onClick={handleCancel.handleClick} className="w-full p-3 rounded-full bg-gray-500 text-white hover:bg-gray-700 focus:outline-none"> Cancel </button>
+          <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
+            <button onClick={handleSaveSearch} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
+            <Link href="/home">
+              <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
+            </Link>
           </div>
-          
         )}
       </div>
     </div>

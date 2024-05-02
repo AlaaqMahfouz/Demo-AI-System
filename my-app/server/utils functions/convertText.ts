@@ -21,9 +21,9 @@ export async function convertText(searchString:string): Promise<string> {
       },
         "education": [
             {
-                "school": [""],
-                "degree": [""],
-                "fieldOfStudy": [""],
+                "school": "",
+                "degree": "",
+                "fieldOfStudy": "",
                 "startDate": "",
                 "endDate": ""
             }
