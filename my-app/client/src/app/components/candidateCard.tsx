@@ -1,13 +1,27 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
+import { downloadFile } from './util_downloadFile';
 
 interface CandidateProps {
   isOpen: boolean;
   onClose: () => void;
   data: any;
   resumeInfo: any;
+  files: any[];
 }
 
-const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo }) => {
+const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo, files }) => {
+  const handleDownloadFile = async (fileName: string) => {
+    const file = await downloadFile(`${data.resumeID}/${fileName}`);
+
+    if (file) {
+      const url = window.URL.createObjectURL(file);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    }
+  };
 
   return (
     <div className={`popup ${isOpen ? 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : ''} bg-gray-200 inset-0 z-50 p-5 min-w-96 cardHeight h-2/3 rounded-2xl`}>
@@ -19,7 +33,7 @@ const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo }
         </div>
         <div className='p-2'>
             <div className='text-center text-blue-900 text-2xl'>Candidate Details</div>
-            <p className='text-center text-blue-900'>{data.name}'s Info</p> {/* Replace with your data properties */}
+            <p className='text-center text-blue-900'>{data.name}'s Info</p>
             <div className='bg-gray-300 overflow-auto min-h-2/3 max-h-96 w-full text-blue-900 rounded-lg p-4'
             dangerouslySetInnerHTML={{ __html: resumeInfo  }}
             >
@@ -27,7 +41,11 @@ const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo }
             </div>
             <hr className="w-72 mx-auto mb-4 mt-4 border-blue-900 border-2" />
             <div className='bg-gray-300'>
-              {/* Downloadables */}
+              {files.map((file) => (
+                <button key={file.name} onClick={() => handleDownloadFile(file.name)} className='rounded-xl'>
+                  {file.name}
+                </button>
+              ))}
             </div>
         </div>
     </div>

@@ -14,6 +14,5 @@ logs/
 .cache/
 
 .next/
-my-app/client/
 my-app/server/node_modules
 my-app/client/.next/cache/webpack/client-development/0.pack.gz
