@@ -6,11 +6,13 @@ import Sidebar from "../components/sidebar";
 import Welcome from "../components/welcome";
 import FileUpload from "../components/file-upload";
 import Link from "next/link";
+import { createContext } from 'react';
 
 // import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
 // const supabase = createClient('NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'); //values in env.local
 
+const PopupContext = createContext(null);
 
 export default function Home(){
 
@@ -19,6 +21,22 @@ export default function Home(){
 
     const openFileUpload = () => setIsFileUploadOpen(true);
     const closeFileUpload = () => setIsFileUploadOpen(false);
+
+
+    //pop up 
+// const PopupProvider = () => {
+//   const [showPopup, setShowPopup] = useState(false);
+//   const [popupMessage, setPopupMessage] = useState('');
+
+//   const handleShowPopup = (message:any) => {
+//     setShowPopup(true);
+//     setPopupMessage(message);
+//   };
+
+//   const handleHidePopup = () => {
+//     setShowPopup(false);
+//   };
+// }
 
     return(
         <div className="grid h-3/4">
@@ -69,9 +87,14 @@ export default function Home(){
             </div>
             {isFileUploadOpen && ( // Render FileUpload only when open
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 z-50">
+                         
+
                     <FileUpload onClose={closeFileUpload} />
+
                 </div>
             )}
         </div>
     );
 }
+
+

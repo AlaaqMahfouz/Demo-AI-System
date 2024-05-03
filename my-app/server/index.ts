@@ -287,6 +287,8 @@ app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),asyn
           await sendToSupabase(parsedCV,supportingFiles);
           
           res.json(parsedCV);
+
+          
           
           // empty temperory saved files and images
           await fsExtra.emptyDir('Images');

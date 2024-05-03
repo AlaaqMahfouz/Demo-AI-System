@@ -1,5 +1,12 @@
+'use client'
+
 import React, { FC } from 'react';
-import { downloadFile } from './util_downloadFile';
+import { downloadFolder } from './util_downloadFile';
+import { createClient } from '@supabase/supabase-js';
+
+
+const supabase = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+
 
 interface CandidateProps {
   isOpen: boolean;
@@ -9,18 +16,39 @@ interface CandidateProps {
   files: any[];
 }
 
-const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo, files }) => {
-  const handleDownloadFile = async (fileName: string) => {
-    const file = await downloadFile(`${data.resumeID}/${fileName}`);
+interface ResumeInfo{
+  resumeID:number;
+  name:string;
+  resumeHTML:any;
+}
+let resumeHTML;
+const CandidateCard: FC<CandidateProps> =  ({ isOpen, onClose, data, resumeInfo, files }) => {
 
-    if (file) {
-      const url = window.URL.createObjectURL(file);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }
+  // console.log("files reception from card : " + JSON.stringify(files))
+  const Files = files as unknown as ResumeInfo;
+  resumeHTML= Files.resumeHTML;
+  console.log("files to card : " + JSON.stringify(Files.resumeHTML))
+  console.log("files structure: " + JSON.stringify(Files))
+  console.log("resume info : " + JSON.stringify(resumeInfo))
+  const handleDownloadFile = async (fileId: number) => {
+
+    // const files = await downloadFolder(fileId);
+
+    // console.log("files sent :" + JSON.stringify(files))
+
+    // check if there are files associated with this CV
+    // if(files?.length==0)
+    //   {
+    //     console.log("no files are available for this CV");
+    //   }
+
+      // const { data, error } = await supabase.storage
+      // .from('Supporting Docs')
+      // .download("48.jpg",);
+
+
+      
+
   };
 
   return (
@@ -35,17 +63,17 @@ const CandidateCard: FC<CandidateProps> = ({ isOpen, onClose, data, resumeInfo, 
             <div className='text-center text-blue-900 text-2xl'>Candidate Details</div>
             <p className='text-center text-blue-900'>{data.name}'s Info</p>
             <div className='bg-gray-300 overflow-auto min-h-2/3 max-h-96 w-full text-blue-900 rounded-lg p-4'
-            dangerouslySetInnerHTML={{ __html: resumeInfo  }}
+            dangerouslySetInnerHTML={{ __html: resumeHTML  }}
             >
                 {/* {parsedHTML} */}
             </div>
             <hr className="w-72 mx-auto mb-4 mt-4 border-blue-900 border-2" />
             <div className='bg-gray-300'>
-              {files.map((file) => (
-                <button key={file.name} onClick={() => handleDownloadFile(file.name)} className='rounded-xl'>
-                  {file.name}
+              {Files &&(
+                <button key={Files.name} onClick={() => handleDownloadFile(Files.resumeID)} className='rounded-xl'>
+                  {Files.name}
                 </button>
-              ))}
+              )}
             </div>
         </div>
     </div>

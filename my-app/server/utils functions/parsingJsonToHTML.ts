@@ -102,6 +102,15 @@ export async function ParsingJsonToHTML(resumeInfo: string): Promise<string> {
     const response = result.response;
     let parsedHTML = response.text();
     console.log("parsed text before return it :" + parsedHTML);
+
+    const pattern = /^```HTML|^```html/;
+    if(pattern.test(parsedHTML)){
+      console.log("html word detected!2")
+      parsedHTML = parsedHTML.replace(/^```html\s*|\s*```$/g, '');
+      parsedHTML = parsedHTML.replace(/^```HTML\s*|\s*```$/g, '');
+    }
+
+
     return parsedHTML;
 
   } catch (error) {

@@ -103,7 +103,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
               console.log("FIle to be uploaded :" + file)
               let fileType=determineFileType(file.originalname);
               const extension =  file?.originalname.split('.').pop()?.toLowerCase() || '';
-              let path =  resume.resumeID + '/' + uuidv4();
+              let path =  resume.resumeID + '/' + file.originalname ;
               const fileData = fs.readFileSync(file.path)
               const { data , error } = await client.storage
               .from('Supporting Docs') // Specify the name of your storage bucket

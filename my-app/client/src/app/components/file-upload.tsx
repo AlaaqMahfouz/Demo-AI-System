@@ -5,6 +5,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
+
+
 interface FileUploadProps {
   onClose: () => void;
 }
@@ -15,6 +17,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false); // State for upload progress
   const [isUploading, setIsUploading] = useState(false); // State to prevent multiple clicks
+  const[toastIsVisible,setToastIsVisible]=useState(false);
 
   const handleCvChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCvFile(event.target.files?.[0] ?? null);
@@ -61,6 +64,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
             },
           }
         );
+        
+        // handle successful upload
+        if (response.status >= 200 && response.status < 300) {
+          setToastIsVisible(true);
+        } 
 
         console.log('Files uploaded:', response.data);
         onClose(); // Close the popup after successful upload
@@ -84,6 +92,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
 
   // Check if at least one file (CV or other) is selected for disabling the upload button
   const hasSelectedFiles = file || (otherFiles && otherFiles.length > 0);
+
+
+  
+
+  
 
   return (
     <div className="fixed bg-opacity-75 inset-0 z-50 flex justify-center items-center">
@@ -143,6 +156,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         </button>
         </div>
       </div>
+
     </div>
   );
 };
