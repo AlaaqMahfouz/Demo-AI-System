@@ -14,51 +14,40 @@ export async function convertText(searchString:string): Promise<string> {
         return '';
     }
     const jsonTemplate: string = `{
-      "addresses": {
+        "addresses": [{
           "city": "",
           "state": "",
           "country": ""
-      },
-        "education": [
-            {
+        }],
+        "education": [{
                 "school": "",
                 "degree": "",
                 "fieldOfStudy": "",
                 "startDate": "",
                 "endDate": ""
-            }
-        ]
-      ,
-      "workExperience": 
-          {
+        }],
+        "workExperience": [{
               "company": "",
               "position": "",
               "startDate": "",
               "endDate": ""
-          }
-      ,
-      "projects": 
-          {
+        }],
+        "projects": [{
               "projectName": "",
               "languages": "",
               "startDate": "",
               "endDate": ""
-          }
-      ,
-      "skills": {
-          "skillName": ""
-      },
-      "certifications": 
-          {
+        }],
+        "skills": [{
+            "skillName": ""
+        }],
+        "certifications": [{
               "certificationName": ""
-          }
-      ,
-      "languages": 
-          {
+        }],
+        "languages": [{
               "languageName": "",
               "proficiency": ""
-          }
-      
+        }]
   }`;
     const genAI = new GoogleGenerativeAI("AIzaSyBDojqEFTP5MbdXksNPUgh6a1vq84VDIgw"); // config gemini AI 
       

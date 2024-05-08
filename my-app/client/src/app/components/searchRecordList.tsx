@@ -42,7 +42,7 @@ const SearchRecordList: React.FC = () => {
                   searchID: search.searchID,
                   title: search.title
                 }
-              }}>
+              }}  passHref>
                 <span className="cursor-pointer flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 hover:bg-blue-950 text-blue-900 hover:text-gray-100 hover:shadow-xl hover:shadow-blue-900 hover:-translate-y-3 font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2">
                   {search.title}
                 </span>
@@ -50,9 +50,11 @@ const SearchRecordList: React.FC = () => {
             </li>
           ))) : (
             <li>
-              <span className="flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 text-blue-900 hover:shadow-xl hover:shadow-blue-900  font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2">
-                0 Saved Searches 
-              </span>
+              <Link href={'/newSearch'} passHref>
+                <span className="flex items-center justify-center m-2 mb-10 rounded-3xl h-28  bg-gray-100 text-blue-900 hover:shadow-xl hover:shadow-blue-900  font-bold text-center text-lg border-blue-950 hover:border-gray-100  border-2">
+                  0 Saved Searches 
+                </span>
+              </Link>
             </li>
           )}
         </ul>

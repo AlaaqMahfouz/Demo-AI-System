@@ -1,6 +1,5 @@
 import {isEmptyString} from '../index';
 import { createClient } from "@supabase/supabase-js";
-import {selectResume} from './selectResume';
 import {getResumes} from './getResumes';
 
 //this function takes the structured search string (returned by convertText) and the number of results wanted and an array of selected resumes
@@ -24,55 +23,126 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
       structuredSearchString = structuredSearchString.replace(/^```json\s*|\s*```$/g, '');
       structuredSearchString = structuredSearchString.replace(/^```JSON\s*|\s*```$/g, '');
     }
+      console.log('SearchJSON string: ', structuredSearchString);
       const searchJSON = JSON.parse(structuredSearchString);
-      
+      console.log('Search JSON: ', searchJSON);
       // Initialize Supabase client
       const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
       
-      let selectedResumes: number[] = [];
+      //let selectedResumes: number[] = [];
+      // Use Set to store selected resume IDs (avoids duplicates)
+      const selectedResumes = new Set<number>();
+
       const tables = Object.keys(searchJSON); //the top-level keys of our JSON object matches the tables' titles we want to search through in the database
       //we iterate through each table 
       for (const table of tables) {
-        const columns = Object.keys(searchJSON[table]);
-        for(const column of columns){
-          //in some cases, the searches values in the requirements are arrays 
-          //i.g. "degree" : [Bachelor's, Master's]
-          if (Array.isArray(searchJSON[table][column])) {
-            //so we have to perform the select query for each value of this array 
-            for(const value of searchJSON[table][column]){
-              const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${value}%`).neq(column,null);
-              if (error) {
-                console.error(`Error searching ${table} at ${column}:`, error.message);
-                break;
-              } else {
-                //data is an array of JSON objects with resumeID as the key 
-                for(const resume of data){
-                  //for each resume we make sure this resume was not selected previously using the selectResume function
-                  if (!previouslySelectedResumes.includes(resume.resumeID)) {
-                    selectResume(selectedResumes, resume.resumeID);
+        if (searchJSON[table].length > 0) {
+          for (let index = 0; index < searchJSON[table].length; index++) {
+            const columns = Object.keys(searchJSON[table][index]);
+            console.log('Columns: ',columns);
+            for(let i = 0; i < columns.length; i++){
+              //in some cases, the searches values in the requirements are arrays 
+              //i.g. "degree" : [Bachelor's, Master's]
+              const searchValue = searchJSON[table][index][columns[i]]; // Access value for current column
+              console.log('search value: ', searchValue);
+              if(Array.isArray(searchValue)){
+                //so we have to perform the select query for each value of this array
+                for(const value of searchValue){
+                  console.log(`Comparing with ${value}.....`);
+                  const { data, error } = await client.from(table).select('resumeID').ilike(columns[i], `%${value}%`).neq(columns[i], null);
+                  if (error) {
+                    console.error(`Error searching ${table} inside ${columns[i]}: `, error);
+                    continue;
+                  } else {
+                    //data is an array of JSON objects with resumeID as the key
+                    for(const resume of data){
+                      console.log(`select resume ID: ${resume.resumeID}`);
+                      //for each resume we make sure this resume was not selected previously using the selectResume function
+                      if (!previouslySelectedResumes.includes(resume.resumeID)) {
+                        console.log(`resume ID inside result array: ${resume.resumeID}`);
+                        //selectResume(selectedResumes, resume.resumeID);
+                        selectedResumes.add(resume.resumeID);
+                      }
+                    }
                   }
-               } 
-              }
-            }
-          } else {
-            const { data, error } = await client.from(table).select('resumeID').ilike(column,`%${searchJSON[table][column]}%`).neq(column, null);
-              if (error) {
-                console.error(`Error searching ${table} at ${column}:`, error.message);
-                break;
-            } else {
-              //data is an array of JSON objects with resumeID as the key
-              for(const resume of data){
-                //for each resume we make sure this resume was not selected previously using the selectResume function
-                if (!previouslySelectedResumes.includes(resume.resumeID)) {
-                  selectResume(selectedResumes, resume.resumeID);
                 }
-              } 
+              }else{
+                console.log(`Comparing with ${searchValue}.....`);
+                  const { data, error } = await client.from(table).select('resumeID').ilike(columns[i], `%${searchValue}%`).neq(columns[i], null);
+                  if (error) {
+                    console.error(`Error searching ${table} inside ${columns[i]}: `, error);
+                    continue;
+                  } else {
+                    //data is an array of JSON objects with resumeID as the key
+                    for(const resume of data){
+                      console.log(`select resume ID: ${resume.resumeID}`);
+                      //for each resume we make sure this resume was not selected previously using the selectResume function
+                      if (!previouslySelectedResumes.includes(resume.resumeID)) {
+                        console.log(`resume ID inside result array: ${resume.resumeID}`);
+                        //selectResume(selectedResumes, resume.resumeID);
+                        selectedResumes.add(resume.resumeID);
+                      }
+                    }
+                  }
+              }
             }
           }
         }
+        
+        // for(const column of columns){
+        //   console.log(`Searching column ${column}.....`);
+        //   //in some cases, the searches values in the requirements are arrays 
+        //   //i.g. "degree" : [Bachelor's, Master's]
+        //   const searchValue = searchJSON[table][column]; // Access value for current column
+        //   console.log(`Search value: ${searchValue}`);
+        //   if (Array.isArray(searchValue)) {
+        //     //so we have to perform the select query for each value of this array 
+        //     for(const value of searchValue){
+        //       console.log(`Comparing with ${value}.....`);
+        //       const { data, error } = await client.from(table).select('resumeID').textSearch(column,`'${value}'`,{
+        //         type: "websearch"
+        //       });
+        //       if (error) {
+        //         console.error(`Error searching ${table} at ${column}:`, error.message);
+        //         //break;
+        //       } else {
+        //         //data is an array of JSON objects with resumeID as the key 
+        //         for(const resume of data){
+        //           console.log(`select resume ID: ${resume.resumeID}`)
+        //           //for each resume we make sure this resume was not selected previously using the selectResume function
+        //           if (!previouslySelectedResumes.includes(resume.resumeID)) {
+        //             console.log(`resume ID inside result array: ${resume.resumeID}`)
+        //             //selectResume(selectedResumes, resume.resumeID);
+        //             selectedResumes.add(resume.resumeID);
+        //           }
+        //        } 
+        //       }
+        //     }
+        //   } else {
+        //     console.log(`Comparing with ${searchValue}.....`);
+        //     const { data, error } = await client.from(table).select('resumeID').textSearch(column,`'${searchValue}'`, {
+        //       type: "websearch"
+        //     });
+        //       if (error) {
+        //         console.error(`Error searching ${table} at ${column}:`, error.message);
+        //         //break;
+        //     } else {
+        //       //data is an array of JSON objects with resumeID as the key
+        //       for(const resume of data){
+        //         console.log(`select resume ID: ${resume.resumeID}`)
+        //         //for each resume we make sure this resume was not selected previously using the selectResume function
+        //         if (!previouslySelectedResumes.includes(resume.resumeID)) {
+        //           console.log(`resume ID inside result array: ${resume.resumeID}`)
+        //           //selectResume(selectedResumes, resume.resumeID);
+        //           selectedResumes.add(resume.resumeID);
+        //         }
+        //       } 
+        //     }
+        //   }
+        // }
       }
-  
-      return getResumes(selectedResumes, inputNumber);
+      console.log(selectedResumes);
+      return getResumes(Array.from(selectedResumes), inputNumber);
     } catch (error) {
       console.error('Error searching through the database:', error);
       return [];
