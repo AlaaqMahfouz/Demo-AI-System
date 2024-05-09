@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
@@ -13,32 +13,53 @@ interface SearchRecord {
 
 const SearchFormAgain: React.FC = () => {
   const searchParams = useSearchParams()!;
-  const [searchID, setSearchID] = useState<number>(parseInt(searchParams.get('searchID')!));
+  const [searchID, setSearchID] = useState<number>(parseInt(searchParams.get('searchID') || '0'));
   const [title, setTitle] = useState<string>(searchParams.get('title')!);
   const [searchRecord, setSearchRecord] = useState<SearchRecord>();
   //const searchID = parseInt(searchParams.get('searchID')!);
   //const title = searchParams.get('title')!;
   const [previousSearchResults, setPreviousSearchResults] = useState<any[]>([]);
-  const [searchRequirements, setSearchRequirements] = useState<string>('');
+  const [searchRequirements, setSearchRequirements] = useState<any>();
   const [limit, setLimit] = useState<number>(5);
 
-  useEffect(() => {
-    const setSearch = async () => {
+  const getSearchRequirements = async () => {
+    try {
+      // Make HTTP GET request to retrieve the search requirements from the database
+      const response = await axios.get('http://localhost:4000/get-search-requirement', {params: {
+        searchID: searchID
+      }});
+
+      const requirements = await response.data;
+      console.log('Search Requirements: ', requirements);
+      const reqJSON = JSON.parse(requirements);
+      console.log('Search Requirements JSON: ', reqJSON);
+      setSearchRequirements(reqJSON);
       
+    } catch (error) {
+      console.error('Error getting search requirements:', error);
     }
-    const getSearchRequirements = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/get-search-requirement', {
-          
-        });
-        const requirement: string = await response.data;
-        setSearchRequirements(requirement);
-      } catch (error) {
-        console.error(error);
-      }
+  };
+
+  const getSearchResults = async () => {
+    try {
+      // Make HTTP GET request to retrieve the search requirements from the database
+      const response = await axios.get('http://localhost:4000/get-search-result', {params: {
+        searchID: searchID
+      }});
+
+      const oldResults = await response.data;
+      console.log('1st Search Results: ', oldResults);
+      setPreviousSearchResults(oldResults);
+    } catch (error) {
+      console.error('Error getting search results:', error);
     }
+  }
+
+  useEffect(() => {
+    console.log('search id: ', searchID);
     getSearchRequirements();
-  },[])
+    getSearchResults();
+  }, [])
 
   const handleSearchAgain = async () => {
     try {
@@ -65,6 +86,23 @@ const SearchFormAgain: React.FC = () => {
         <div className='text-6xl text-blue-900 text-center m-12'>
           {title}
         </div>
+        <div className="max-w-screen-xl mx-auto">
+          <p className="sm:text-3xl text-3xl text-blue-900 text-center m-4">
+            Search Requirements:
+          </p>
+          <p className="text-blue-900 font-bold p-4">
+            {JSON.stringify(searchRequirements)}
+          </p>
+        </div>
+
+        <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
+        {/* Render the SearchResults component and pass the searchResults state */}
+        <div className="sm:text-3xl text-3xl text-blue-900 text-center m-12">
+           Search Results
+        </div>
+        <SearchResults results={previousSearchResults} /> 
+
+        <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
         <div className="flex items-center justify-center h-full">
           <div className="align-center">
             <label htmlFor="resultNumber" className="mb-2 text-sm font-medium text-indigo-500 mr-3 dark:text-white"></label>
@@ -91,8 +129,11 @@ const SearchFormAgain: React.FC = () => {
         </div>
           
         <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
-        {/* Render the SearchResults component and pass the searchResults state */}
-        {/* <SearchResults results={searchResults} /> */}
+        {/* Render the NEW SearchResults component and pass the searchResults state */}
+        {/*<div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
+           Search Results
+        </div>
+        <SearchResults results={previousSearchResults} /> */}
 
         {/* Render the "Save" button if search results are present and not already saved */}
         {/* {searchResults.length > 0 && !savedSearch && (

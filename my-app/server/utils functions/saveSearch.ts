@@ -7,11 +7,12 @@ export async function saveSearch(searchTitle: string, structuredSearchString:str
       
       // Initialize Supabase client
       const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
+      
       console.log("search Data" + JSON.stringify(searchData))
       console.log("structured string from save search :" + structuredSearchString)
       let search: any={}; //empty JSON object
       search.title = searchTitle; //appending the title to search 
-      search.dateOfCreation = new Date().toLocaleString('en-US', { timeZone: 'Asia/Beirut' })
+      search.dateOfCreation = new Date().toLocaleString('en-US', { timeZone: 'Asia/Beirut' }); //appending dateOfCreation to search
       let searchResult : number[] = []; //array to store the resume IDs of the search results
       for(const resume of searchData){
         // const keys = Object.keys(searchData); //keys = ['resumeID','name'] 
@@ -24,6 +25,7 @@ export async function saveSearch(searchTitle: string, structuredSearchString:str
       /*
         search = {
           "title": "",
+          "dateOfCreation": "",
           "searchResult": []
         }
        */

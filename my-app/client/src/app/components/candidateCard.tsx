@@ -61,7 +61,7 @@ const CandidateCard: FC<CandidateProps> =  ({ isOpen, onClose, data, resumeInfo,
         </div>
         <div className='p-2'>
             <div className='text-center text-blue-900 text-2xl'>Candidate Details</div>
-            <p className='text-center text-blue-900'>{data.name}'s Info</p>
+            <p className='text-center text-blue-900'>{data.name} Info</p>
             <div className='bg-gray-300 overflow-auto min-h-2/3 max-h-96 w-full text-blue-900 rounded-lg p-4'
             dangerouslySetInnerHTML={{ __html: resumeHTML  }}
             >

@@ -98,9 +98,6 @@ const SearchResults:FC<SearchResultProps> = ({ results }) => {
 
   return (
     <div>
-      <div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
-        New Search Results
-      </div>
       <div className='container mx-auto flex flex-wrap justify-around'>
         {results.map((result, index) => (
           <div

@@ -123,9 +123,20 @@ app.get('/get-searches', async (req: Request, res: Response) => {
 
 app.get('/get-search-result', async (req: Request, res: Response) => {
       try {
-        const {searchID} = req.body;
-        const searchResults = await getSearchResult(searchID);
-        res.status(200).json(searchResults);
+        // Extract searchID from the request query parameters
+        const searchIDParam = req.query.searchID;
+        // Check if searchIDParam is defined and not null
+        if (typeof searchIDParam === 'string') {
+          // Convert searchIDParam to a number
+          const searchID = parseInt(searchIDParam);
+          // Call getSearchResult with the parsed searchID
+          const searchResults = await getSearchResult(searchID);
+          // Send the searchRequirement as a JSON response
+          res.status(200).json(searchResults);
+        } else {
+          // If searchIDParam is undefined or null, return an error response
+          res.status(400).json({ error: 'Search ID is missing or invalid' });
+        }
       } catch (error) {
         console.error('Error getting search results:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -134,9 +145,20 @@ app.get('/get-search-result', async (req: Request, res: Response) => {
 
 app.get('/get-search-requirement', async (req:Request, res: Response) => {
       try {
-        const {searchID} = req.body;
-        const searchRequirement = await getSearchRequirement(searchID);
-        res.status(200).json(searchRequirement);
+        // Extract searchID from the request query parameters
+        const searchIDParam = req.query.searchID;
+        // Check if searchIDParam is defined and not null
+        if (typeof searchIDParam === 'string') {
+          // Convert searchIDParam to a number
+          const searchID = parseInt(searchIDParam);
+          // Call getSearchRequirement with the parsed searchID
+          const searchRequirement = await getSearchRequirement(searchID);
+          // Send the searchRequirement as a JSON response
+          res.status(200).json(searchRequirement);
+        } else {
+          // If searchIDParam is undefined or null, return an error response
+          res.status(400).json({ error: 'Search ID is missing or invalid' });
+        }
       } catch (error) {
         console.error('Error getting search requirements:', error);
         res.status(500).json({ error: 'Internal server error' });

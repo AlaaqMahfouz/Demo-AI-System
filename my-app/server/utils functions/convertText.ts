@@ -54,14 +54,14 @@ export async function convertText(searchString:string): Promise<string> {
     try {
         const generationConfig = {
             maxOutputTokens: 1000,
-            temperature: 0.9,
+            temperature: 0.5,
             topP: 0.1,
             topK: 16,
         };
       
         const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
       
-        const prompt = `This is the job requirements:\n${searchString}\nPlease parse the information into this JSON template:\n${jsonTemplate} while making sure that all missing information are set to null.\nRespect the template only and include all requirements.`;
+        const prompt = `This is the job requirements:\n${searchString}\nPlease parse the information into this JSON template:\n${jsonTemplate}.\nRespect the template only and include all requirements.`;
       
         const result = await model.generateContent(prompt);
         const response = await result.response;

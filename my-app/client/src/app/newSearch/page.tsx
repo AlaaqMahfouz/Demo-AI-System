@@ -117,16 +117,21 @@ const SearchForm: React.FC = () => {
         </form>
 
         <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
-        {/* Render the SearchResults component and pass the searchResults state */}
-        <SearchResults results={searchResults} />
 
         {/* Render the "Save" button if search results are present and not already saved */}
         {searchResults.length > 0 && !savedSearch && (
-          <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
-            <button onClick={handleSaveSearch} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
-            <Link href="/home">
-              <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
-            </Link>
+          <div>
+            {/* Render the SearchResults component and pass the searchResults state */}
+            <div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
+              Search Results
+            </div>
+            <SearchResults results={searchResults} />
+            <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
+              <button onClick={handleSaveSearch} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
+              <Link href="/home">
+                <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
+              </Link>
+            </div>
           </div>
         )}
       </div>
