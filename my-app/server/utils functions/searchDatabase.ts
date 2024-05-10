@@ -88,58 +88,6 @@ export async function searchDatabase(structuredSearchString: string, inputNumber
             }
           }
         }
-        
-        // for(const column of columns){
-        //   console.log(`Searching column ${column}.....`);
-        //   //in some cases, the searches values in the requirements are arrays 
-        //   //i.g. "degree" : [Bachelor's, Master's]
-        //   const searchValue = searchJSON[table][column]; // Access value for current column
-        //   console.log(`Search value: ${searchValue}`);
-        //   if (Array.isArray(searchValue)) {
-        //     //so we have to perform the select query for each value of this array 
-        //     for(const value of searchValue){
-        //       console.log(`Comparing with ${value}.....`);
-        //       const { data, error } = await client.from(table).select('resumeID').textSearch(column,`'${value}'`,{
-        //         type: "websearch"
-        //       });
-        //       if (error) {
-        //         console.error(`Error searching ${table} at ${column}:`, error.message);
-        //         //break;
-        //       } else {
-        //         //data is an array of JSON objects with resumeID as the key 
-        //         for(const resume of data){
-        //           console.log(`select resume ID: ${resume.resumeID}`)
-        //           //for each resume we make sure this resume was not selected previously using the selectResume function
-        //           if (!previouslySelectedResumes.includes(resume.resumeID)) {
-        //             console.log(`resume ID inside result array: ${resume.resumeID}`)
-        //             //selectResume(selectedResumes, resume.resumeID);
-        //             selectedResumes.add(resume.resumeID);
-        //           }
-        //        } 
-        //       }
-        //     }
-        //   } else {
-        //     console.log(`Comparing with ${searchValue}.....`);
-        //     const { data, error } = await client.from(table).select('resumeID').textSearch(column,`'${searchValue}'`, {
-        //       type: "websearch"
-        //     });
-        //       if (error) {
-        //         console.error(`Error searching ${table} at ${column}:`, error.message);
-        //         //break;
-        //     } else {
-        //       //data is an array of JSON objects with resumeID as the key
-        //       for(const resume of data){
-        //         console.log(`select resume ID: ${resume.resumeID}`)
-        //         //for each resume we make sure this resume was not selected previously using the selectResume function
-        //         if (!previouslySelectedResumes.includes(resume.resumeID)) {
-        //           console.log(`resume ID inside result array: ${resume.resumeID}`)
-        //           //selectResume(selectedResumes, resume.resumeID);
-        //           selectedResumes.add(resume.resumeID);
-        //         }
-        //       } 
-        //     }
-        //   }
-        // }
       }
       console.log(selectedResumes);
       return getResumes(Array.from(selectedResumes), inputNumber);

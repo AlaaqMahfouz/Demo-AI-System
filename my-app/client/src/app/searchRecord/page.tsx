@@ -26,7 +26,6 @@ const SearchFormAgain: React.FC = () => {
 
   //for search again
   const [limit, setLimit] = useState<number>(5);
-  const [result, setResult] = useState<any>();
   const [newSearchResults, setNewSearchResults] = useState<any[]>([]);
 
   //for save again
