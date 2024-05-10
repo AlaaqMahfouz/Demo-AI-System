@@ -15,6 +15,8 @@ import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
 import extractDocImages from '../extractImageDoc'
 import  NextApiError  from 'next';
+import { NextApiRequest,NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 const bodyParser = require('body-parser');
 
 
@@ -53,7 +55,10 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
     
       console.log("this is a doc file ");
-      
+
+      let res:NextResponse;
+
+      let req:NextRequest;
       try{
         finalText   = await docxToHtml();
 
@@ -132,12 +137,25 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
 
 
- async function docxToHtml(): Promise<string> { // handle doc files with mammoth
-    const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
-    const value = RawTextPromise.value;
-    console.log("text : " + value);
-    return value;
-  }
+//  async function docxToHtml(): Promise<string> { // handle doc files with mammoth
+//     const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
+//     const value = RawTextPromise.value;
+//     console.log("text : " + value);
+//     return value;
+//   }
+
+  const docxToHtml = async () => {
+    // Your existing code here
+    async function handleDocxToHtml() {
+      const RawTextPromise = await mammoth.extractRawText({ path: completeFilePath });
+      const value = RawTextPromise.value;
+      console.log("text : " + value);
+      return value;
+    }
+    return handleDocxToHtml();
+  };
+  
+  
   
   async function OCR (){  // handle images with tesseract
     try{
