@@ -104,8 +104,8 @@ export default function Home(){
                                 Upload CV
                                 <div className="p-1 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <svg className="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 24 24">
-                                    <path d="m8 8 4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M12 4v12M19 17v.6c0 1.33-1.07 2.4-2.4 2.4H7.4C6.07 20 5 18.93 5 17.6V17" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                    <path d="m8 8 4-4 4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M12 4v12M19 17v.6c0 1.33-1.07 2.4-2.4 2.4H7.4C6.07 20 5 18.93 5 17.6V17" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round"/>
                                 </svg>
                                 </div>
                             </button>
