@@ -8,7 +8,7 @@ the content of the json object which structures the extracted data is split into
 */
 
 //send to supabase function 
-export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): Promise<void> {
+export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): Promise<string | void> {
 
     // Initialize Supabase client
     const client = createClient("https://oquytlezdjnnavnjwsue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xdXl0bGV6ZGpubmF2bmp3c3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTExODQ2NTYsImV4cCI6MjAyNjc2MDY1Nn0.2_PfE7QWBKQmPmUKHaTGX_DtUNDTmXnkW8rkMsEfzcw");
@@ -22,7 +22,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
         } else {
           if (selectData.length > 0 ) {
             console.error('Error resume already uploaded and saved in the database', selectData);
-            return; //stop the code
+            return "failed"; //stop the code
           }
         }
 
@@ -128,7 +128,8 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
               //   console.log('File type:', fileInfo.isFile() ? 'File' : 'Directory');
               // }
           }
-        console.log("Data successfully sent to Supabase");
+          console.log("Data successfully sent to Supabase");
+          return "success";
 
 
         //  await client.storage
@@ -138,7 +139,7 @@ export async function sendToSupabase(parsedJSON: string ,supportingFiles:any): P
         
     }catch(error){
         console.error('Error sending to the DB:', error);
-        return;
+        return "failed";
     }
 
 

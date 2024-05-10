@@ -7,6 +7,8 @@ import Welcome from "../components/welcome";
 import FileUpload from "../components/file-upload";
 import Link from "next/link";
 import { createContext } from 'react';
+import Success from "../toast-Components/success-toast";
+import Fail from "../toast-Components/failed-toast";
 
 // import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 
@@ -14,14 +16,39 @@ import { createContext } from 'react';
 
 const PopupContext = createContext(null);
 
+
+
 export default function Home(){
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isFileUploadOpen, setIsFileUploadOpen] = useState(false);
+    const [isSuccessToastOpen, setSuccessToastOpen] = useState(false);
+    const [isFailedToastOpen, setFailedToastOpen] = useState(false);
 
     const openFileUpload = () => setIsFileUploadOpen(true);
-    const closeFileUpload = () => setIsFileUploadOpen(false);
+    const closeFileUpload = (result:string) => {
+        setIsFileUploadOpen(false);
+        console.log("res : " + result)
+        let timer;
+        switch(result){
 
+        case "success":
+            setSuccessToastOpen(true)
+            
+            timer = setTimeout(() => {
+                setSuccessToastOpen(false);
+              }, 5000); // 3000ms = 3s
+        
+            break;
+        case "failed":
+            setFailedToastOpen(true);
+            break;
+        default:
+
+                
+            }
+        
+    }
 
     //pop up 
 // const PopupProvider = () => {
@@ -41,14 +68,30 @@ export default function Home(){
     return(
         <div className="grid h-3/4">
             <div>
-                <Headband
+             <Headband
                     onToggle={ () => {
                         setIsSidebarOpen(!isSidebarOpen);
                     } }
-                />
+                    />
                 {isSidebarOpen && <Sidebar isSidebarOpen={isSidebarOpen} />}
                 {/* {isSearchOpen && <SearchForm isSearchOpen={isSearchOpen} />} */}
             </div>
+                    {isSuccessToastOpen && 
+                            <Success  
+
+                                 onToggle={ () => {
+                                    setSuccessToastOpen(false);
+                                } }
+                            />
+                }
+                {isFailedToastOpen && 
+                            <Fail 
+                                 onToggle={ () => {
+                                    setFailedToastOpen(false);
+                                } }
+                                
+                            />
+                }
             <div className={` ${ isSidebarOpen ? "sm:ml-56" : "" }  justify-self-center mt-20`}>
                 <div>
                     <Welcome/>
@@ -81,8 +124,13 @@ export default function Home(){
                                 </button>
                             </Link>
                         </div>
+
                     </div>
-                    {isFileUploadOpen && <FileUpload onClose={closeFileUpload} />}
+                    {isFileUploadOpen && 
+                    
+                    <FileUpload onClose={closeFileUpload} />
+
+                    }
                 </div>
             </div>
             {isFileUploadOpen && ( // Render FileUpload only when open
@@ -93,6 +141,7 @@ export default function Home(){
 
                 </div>
             )}
+       
         </div>
     );
 }

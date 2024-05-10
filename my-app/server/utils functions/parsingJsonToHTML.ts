@@ -94,6 +94,8 @@ export async function ParsingJsonToHTML(resumeInfo: string): Promise<string> {
       topK: 16,
     };
 
+
+
     const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
 
     const prompt = `This is a json type text:\n${jsonToParse}\nFollowing the following template:\n${jsonTemplate}\nPlease parse the information into a structured HTML format using only div, ul, ol, li, b, u; while making sure that all missing or null places and information are not included`;

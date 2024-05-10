@@ -75,6 +75,8 @@ for(const file of downloadedFiles){
 
 
 console.log("downloaded : "+ JSON.stringify(downloadedFiles))
+
+return downloadedFiles;
 //   for(const file of data)
 //     {
 

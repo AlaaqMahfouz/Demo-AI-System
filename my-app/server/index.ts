@@ -199,15 +199,12 @@ app.get('/get-search-result-array', async (req: Request, res: Response) => {
         else
         cb(null,'../client/supporting Files')
     
-        // else
-        // cb(null,'../client/supportingFiles')
       },
       filename: (req:any,file:any,cb:any)=>{
         try {
           
           console.log(file)
           console.log(file.originalname)
-          // Generating Unique name   
           fileName=Date.now() + path.extname(file.originalname);
           
           if(file.fieldname=="CV"){
@@ -237,86 +234,118 @@ app.post('/upload', upload.fields([{ name: 'CV' }, { name: 'otherFiles' }]),asyn
     }
     else{
 
-      console.log('hi')
       let file =  req.files['CV'][0];
       
-  let supportingFiles=null;
+      let supportingFiles=null;
 
-  
+  // saving supporting files
   if(req.files['otherFiles']!=null)
     supportingFiles=req.files['otherFiles'];
-
-  console.log("FIle:" +file)
-  console.log("supporting files :",supportingFiles)
-  
-  
-  console.log
   
   
   // variable for extracted text
   let finalText='';
-  let TextExtracted:string[]
-  
-  
-  console.log("file Name" , file )
-  
+    
   
     if (file) {           
       
          await ExtractText(file,completeFilePath).then(async (text)=>{
           finalText=text;
           console.log(text);
+
+          return new Promise(async (resolve, reject) => {
+
+          if(isEmptyString(finalText))
+            {
+              console.log("text extracted is null")
+              await fsExtra.emptyDir('Images');
+              await fsExtra.emptyDir('../client/files')
+              await fsExtra.emptyDir('../client/supporting Files')
+              res.status(500).json({message : "due to some error , text couldn't be extracted!"});
+              return;
+            }
+            const pageBreakRegex = /-+Page\s*\(\d+\)\s*Break-+/g
+            const pattern = /[^a-zA-Z0-9\s.,!?@#$%^&*();:"'{}[\]|_+=<>~`/-]/g;
+  
+            finalText = finalText
+            .replace(pageBreakRegex, '')
+            // .replace(pattern, '')
+            // .replace(/\s+/g, ' ')
+            // .replace(/\//g, '//')
+            // .replace(/-/g, '\\\\-')
+            // .replace(/\breduce\b/g, '')
+            // .replace(/^|$/g, '"');
+            // Replace all occurrences of empty lines with an empty string
+    
+            // finalText =JSON.parse(finalText)
+            console.log("final text : " , finalText);
+            // parse text into a structured JSON template 
+            const parsedCV = await Parse(finalText);
+            //sending the extracted data from the uploaded CV to supabase database
+            // console.log("Parsed text is : ", parsedCV)
+            let resultFromInserting :string|void = await sendToSupabase(parsedCV,supportingFiles);
+
+            if(resultFromInserting!=null && resultFromInserting=="success")
+              res.status(201).json({message : 'Successfully inserting the CV into Database!'});
+            else
+              res.status(500).json({message : 'An error occured while inserting into supabase !'});
+            
+  
+            
+            
+            // empty temperory saved files and images
+            await fsExtra.emptyDir('Images');
+            await fsExtra.emptyDir('../client/files')
+            await fsExtra.emptyDir('./supporting Files')
         })
-
-
-       
+         });
         
     }else{
       console.error('file is not valid!');
-      res.status(201).json({message : 'file not Valid!'});
+      res.status(500).json({message : 'file not Valid!'});
     }
     
     return new Promise((resolve, reject) => {
-      // Simulate asynchronous data fetching
-      setTimeout(async() => {
-        if(isEmptyString(finalText))
-          {
-            console.log("text extracted is null")
-            await fsExtra.emptyDir('Images');
-            await fsExtra.emptyDir('../client/files')
-            await fsExtra.emptyDir('../client/supporting Files')
-            return null;
-          }
-          const pageBreakRegex = /-+Page\s*\(\d+\)\s*Break-+/g
-          const pattern = /[^a-zA-Z0-9\s.,!?@#$%^&*();:"'{}[\]|_+=<>~`/-]/g;
+      // // Simulate asynchronous data fetching
+      // setTimeout(async() => {
+      //   if(isEmptyString(finalText))
+      //     {
+      //       console.log("text extracted is null")
+      //       await fsExtra.emptyDir('Images');
+      //       await fsExtra.emptyDir('../client/files')
+      //       await fsExtra.emptyDir('../client/supporting Files')
+      //       return null;
+      //     }
+      //     const pageBreakRegex = /-+Page\s*\(\d+\)\s*Break-+/g
+      //     const pattern = /[^a-zA-Z0-9\s.,!?@#$%^&*();:"'{}[\]|_+=<>~`/-]/g;
 
-    // Replace all occurrences of empty lines with an empty string
-    finalText = finalText
-    .replace(pageBreakRegex, '')
-    .replace(pattern, '')
-    .replace(/\s+/g, ' ')
-    .replace(/\//g, '//')
-    .replace(/-/g, '\\\\-')
-    .replace(/\breduce\b/g, '')
-    .replace(/^|$/g, '"');
+      //     finalText = finalText
+      //     .replace(pageBreakRegex, '')
+      //     .replace(pattern, '')
+      //     .replace(/\s+/g, ' ')
+      //     .replace(/\//g, '//')
+      //     .replace(/-/g, '\\\\-')
+      //     .replace(/\breduce\b/g, '')
+      //     .replace(/^|$/g, '"');
+      //     // Replace all occurrences of empty lines with an empty string
   
-          // finalText =JSON.parse(finalText)
-          console.log("final text : " , finalText);
-          // parse text into a structured JSON template 
-          const parsedCV = await Parse(finalText);
-          //sending the extracted data from the uploaded CV to supabase database
-          // console.log("Parsed text is : ", parsedCV)
-          await sendToSupabase(parsedCV,supportingFiles);
+      //     // finalText =JSON.parse(finalText)
+      //     console.log("final text : " , finalText);
+      //     // parse text into a structured JSON template 
+      //     const parsedCV = await Parse(finalText);
+      //     //sending the extracted data from the uploaded CV to supabase database
+      //     // console.log("Parsed text is : ", parsedCV)
+      //     await sendToSupabase(parsedCV,supportingFiles);
           
-          res.json(parsedCV);
+      //     res.json(parsedCV);
 
           
           
-          // empty temperory saved files and images
-          await fsExtra.emptyDir('Images');
-          await fsExtra.emptyDir('../client/files')
-          await fsExtra.emptyDir('./supporting Files')
-        }, 10000); // Simulate delay
+      //     // empty temperory saved files and images
+      //     await fsExtra.emptyDir('Images');
+      //     await fsExtra.emptyDir('../client/files')
+      //     await fsExtra.emptyDir('./supporting Files')
+      //   }, 10000); // Simulate delay
       });
 
       

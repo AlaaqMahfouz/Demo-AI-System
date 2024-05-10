@@ -21,6 +21,7 @@
     "langchain": "^0.1.30",
     "mammoth": "^1.7.1",
     "multer": "^1.4.5-lts.1",
+    "next": "^14.2.3",
     "pdf-img-convert": "^1.2.1",
     "pdf2json": "^3.0.5",
     "tesseract.js": "^5.0.5",

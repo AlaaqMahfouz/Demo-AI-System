@@ -1,4 +1,6 @@
 
+
+
 import mammoth from "mammoth"
 const Tesseract = require('tesseract.js');
 const multer=require('multer')
@@ -12,7 +14,7 @@ import { convert } from "pdf-img-convert";
 import { writeFileSync } from "fs"
 const PDFParser=require('pdf2json')
 import extractDocImages from '../extractImageDoc'
-import * as fsExtra from 'fs-extra'
+import  NextApiError  from 'next';
 const bodyParser = require('body-parser');
 
 
@@ -100,12 +102,30 @@ export default async function ExtractText(file:any,path:string) : Promise<string
       }
 
     }
-    else{
-      console.log("error : File is not in the expected format!")
+
+    else if(extension=="txt"){
+        console.log("this is a txt file");
+
+        try{
+          finalText=await fs.readFileSync(completeFilePath, 'utf8');
+
+        }catch(error)
+        {
+          console.log("error while parsing from a pdf :",error)
+        }
     }
 
-    console.log("extracted text from outsideL");
-    return finalText;
+    else{
+      console.log("error : File is not in the expected format!")
+      return '';
+    }
+
+    
+
+    if(!isEmptyString(finalText))
+        return finalText;
+    else
+      return '';
 }
 
 

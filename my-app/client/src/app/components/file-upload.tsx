@@ -7,9 +7,12 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 
+
 interface FileUploadProps {
-  onClose: () => void;
+  onClose: (result : string) => void;
 }
+
+
 
 const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
   const [file, setCvFile] = useState<File | null>(null);
@@ -54,7 +57,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         }
       }
 
-      try {
+      try { 
         const response = await axios.post<any>( // Update response type based on server response
           'http://localhost:4000/upload',
           formData,
@@ -66,16 +69,25 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         );
         
         // handle successful upload
-        if (response.status >= 200 && response.status < 300) {
-          setToastIsVisible(true);
-        } 
+        if (response.status < 200 || response.status > 300) 
+          {
+            onClose("failed")
+
+            throw ErrorEvent;
+          }
+          
+        
+        
+        
+        setToastIsVisible(true);
 
         console.log('Files uploaded:', response.data);
-        onClose(); // Close the popup after successful upload
+        onClose("success"); // Close the popup after successful upload
         setIsUploading(false); // Reset uploading flag
       } catch (error) {
         console.error('Error uploading files:', error);
         setUploadError('An error occurred during upload. Please try again.');
+
         setIsUploading(false); // Reset uploading flag
       } finally {
         setUploading(false); // Reset uploading state regardless of success or error
@@ -133,7 +145,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
         <div className="flex justify-center mt-4">
           <button
             className="p-3 w-36 m-4 rounded-full bg-gray-500 text-white hover:bg-gray-700 focus:outline-none"
-            onClick={onClose}
+            onClick={()=>onClose("")}
           >
             Cancel
           </button>
