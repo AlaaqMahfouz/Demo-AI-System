@@ -132,7 +132,7 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
 
 
-export async function docxToHtml(): Promise<string> { // handle doc files with mammoth
+ async function docxToHtml(): Promise<string> { // handle doc files with mammoth
     const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
     const value = RawTextPromise.value;
     console.log("text : " + value);
