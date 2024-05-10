@@ -91,8 +91,8 @@ app.post('/save-search', async (req: Request, res: Response) => {
 
 app.post('/search-again', async (req: Request, res: Response) => {
       try {
-        const {searchTitle, limit} = req.body;
-        const searchAgainResult = await searchAgain(searchTitle, limit);
+        const {searchID, limit} = req.body;
+        const searchAgainResult = await searchAgain(searchID, limit);
         res.status(200).json(searchAgainResult);
       } catch (error) {
         console.error('Error searching again:', error);
@@ -102,8 +102,8 @@ app.post('/search-again', async (req: Request, res: Response) => {
 
 app.post('/save-search-again', async (req:Request, res: Response) => {
       try {
-        const {searchTitle, newResults} = req.body;
-        saveSearchAgain(searchTitle, newResults);
+        const {searchID, newResults} = req.body;
+        saveSearchAgain(searchID, newResults);
         res.status(200).json({message: 'Search Result succesfully saved'})
       } catch (error) {
         console.error('Error saving search again:', error);
