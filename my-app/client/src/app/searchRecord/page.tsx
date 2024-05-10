@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface SearchRecord {
   searchID: number,
@@ -12,15 +13,25 @@ interface SearchRecord {
 }
 
 const SearchFormAgain: React.FC = () => {
+
+  //extracting searchID and search title from the url
   const searchParams = useSearchParams()!;
   const [searchID, setSearchID] = useState<number>(parseInt(searchParams.get('searchID') || '0'));
   const [title, setTitle] = useState<string>(searchParams.get('title')!);
-  const [searchRecord, setSearchRecord] = useState<SearchRecord>();
-  //const searchID = parseInt(searchParams.get('searchID')!);
-  //const title = searchParams.get('title')!;
-  const [previousSearchResults, setPreviousSearchResults] = useState<any[]>([]);
+  
+  //to display search details 
   const [searchRequirements, setSearchRequirements] = useState<any>();
+  const [keys, setKeys] = useState<string[]>([]);
+  const [previousSearchResults, setPreviousSearchResults] = useState<any[]>([]);
+
+  //for search again
   const [limit, setLimit] = useState<number>(5);
+  const [result, setResult] = useState<any>();
+  const [newSearchResults, setNewSearchResults] = useState<any[]>([]);
+
+  //for save again
+  const [savedSearch, setSavedSearch] = useState<boolean>(false); // State to track if search is saved
+  const [newResults, setNewResults] = useState<number[]>([]);
 
   const getSearchRequirements = async () => {
     try {
@@ -29,12 +40,11 @@ const SearchFormAgain: React.FC = () => {
         searchID: searchID
       }});
 
-      const requirements = await response.data;
-      console.log('Search Requirements: ', requirements);
-      const reqJSON = JSON.parse(requirements);
-      console.log('Search Requirements JSON: ', reqJSON);
-      setSearchRequirements(reqJSON);
-      
+      const requirements = await response.data; //the response is a string
+      const reqJSON = JSON.parse(requirements); //parsing the string into a JSON object
+      const array = Object.keys(reqJSON);       //array holds all the top-level keys of the JSON object
+      setKeys(array);                           //keys is an array of the top-level keys of the JSON object
+      setSearchRequirements(reqJSON);           //search requirements saved in the database after the 1st search
     } catch (error) {
       console.error('Error getting search requirements:', error);
     }
@@ -42,7 +52,7 @@ const SearchFormAgain: React.FC = () => {
 
   const getSearchResults = async () => {
     try {
-      // Make HTTP GET request to retrieve the search requirements from the database
+      // Make HTTP GET request to retrieve the saved search results from the database
       const response = await axios.get('http://localhost:4000/get-search-result', {params: {
         searchID: searchID
       }});
@@ -57,19 +67,159 @@ const SearchFormAgain: React.FC = () => {
 
   useEffect(() => {
     console.log('search id: ', searchID);
+    
     getSearchRequirements();
     getSearchResults();
   }, [])
 
+  useEffect(() => {
+    console.log('Keys:', keys); //control results
+  }, [keys]);
+  
+  useEffect(() => {
+    console.log('Search Requirements:', searchRequirements); //control results
+  }, [searchRequirements]);
+
+  const renderJSON = (searchRequirements: any) => {  //this function renders the JSON object searchRequirements to a customized display
+    const elements: any[] = []; // Array to store JSX elements
+    for (const key of keys) {   // Iterate over each key in the 'keys' array
+      let keyHeading;           // Variable to store the heading for the key
+      let itemsList;            // Variable to store the list of items for the key
+
+      // Check if the array of items for the current key is not empty
+      if (searchRequirements[key] && searchRequirements[key].length > 0) {
+        // Depending on the key, set the heading and itemsList accordingly
+        switch (key) {
+          case 'addresses':
+            keyHeading = 'Addresses';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((address: any, index: number) => (
+                  <li key={index}>
+                    {address.city}, {address.state}, {address.country}
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'education':
+            keyHeading = 'Education';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((education: any, index: number) => (
+                  <li key={index}>
+                    {education.school} - {education.degree}
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'workExperience':
+            keyHeading = 'Work Experience';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((workExp: any, index: number) => (
+                  <li key={index}>
+                    {workExp.position} at {workExp.company}
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'projects':
+            keyHeading = 'Projects';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((project: any, index: number) => (
+                  <li key={index}>
+                    {project.projectName} ({project.startDate} - {project.endDate})
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'skills':
+            keyHeading = 'Skills';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((skill: any, index: number) => (
+                  <li key={index}>
+                    {skill.skillName}
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'certifications':
+            keyHeading = 'Certifications';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((certification: any, index: number) => (
+                  <li key={index}>{certification.certificationName}</li>
+                ))}
+              </ul>
+            );
+            break;
+          case 'languages':
+            keyHeading = 'Languages';
+            itemsList = (
+              <ul>
+                {searchRequirements[key].map((language: any, index: number) => (
+                  <li key={index}>
+                    {language.languageName} ({language.proficiency})
+                  </li>
+                ))}
+              </ul>
+            );
+            break;
+        }
+        
+        // Push JSX elements for the current key and its items to the 'elements' array
+        elements.push(
+          <div key={key}>
+            {/* Display the heading for the key */}
+            <p className="sm:text-3xl text-3xl text-blue-900 text-center m-4">
+              {keyHeading}
+            </p>
+            {/* Display the list of items for the key */}
+            {itemsList}
+          </div>
+        );
+      } 
+    }
+    // Return the array of JSX elements
+    return elements;
+  };
+  
+
   const handleSearchAgain = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/new-search', {
+      const response = await axios.post('http://localhost:4000/search-again', {
+        searchID,
         limit
       });
-
-    //   setSearchResults(response.data);
+      let result: any = await response.data;
+      console.log('Resumes found: ', result.resumes);
+      setNewSearchResults(result.resumes);
+      console.log('Result array: ', result.searchResult);
+      setNewResults(result.searchResult);
     } catch (error) {
-      console.error('Error performing search:', error);
+      console.error('Error performing search again:', error);
+    }
+  };
+
+  const handleSaveAgain = async () => {
+    try {
+      // Make HTTP POST request to save the search in the database
+      const response = await axios.post('http://localhost:4000/save-search-again', {
+        searchID,
+        newResults
+      });
+
+      console.log('Search saved successfully:', response.data);
+      setSavedSearch(true); // Set savedSearch to true after saving
+    } catch (error) {
+      console.error('Error saving search:', error);
     }
   };
 
@@ -90,9 +240,10 @@ const SearchFormAgain: React.FC = () => {
           <p className="sm:text-3xl text-3xl text-blue-900 text-center m-4">
             Search Requirements:
           </p>
-          <p className="text-blue-900 font-bold p-4">
-            {JSON.stringify(searchRequirements)}
-          </p>
+          <div className='text-blue-900 p-4 text-center'>
+            {/*JSON.stringify(searchRequirements)*/}
+            {renderJSON(searchRequirements)}
+          </div>
         </div>
 
         <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
@@ -129,20 +280,22 @@ const SearchFormAgain: React.FC = () => {
         </div>
           
         <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
-        {/* Render the NEW SearchResults component and pass the searchResults state */}
-        {/*<div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
-           Search Results
-        </div>
-        <SearchResults results={previousSearchResults} /> */}
-
         {/* Render the "Save" button if search results are present and not already saved */}
-        {/* {searchResults.length > 0 && !savedSearch && (
-          <div className='flex flex-row-reverse space-x-4 space-x-reverse mt-7'>
-            <button onClick={handleSaveSearch} className='flex m-4 justify-center text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-min w-15 py-3 px-4 rounded-full'>Save Search</button>
-            <button onClick={handleCancel.handleClick} className="w-full p-3 rounded-full bg-gray-500 text-white hover:bg-gray-700 focus:outline-none"> Cancel </button>
+        {newSearchResults.length > 0 && !savedSearch && (
+          <div>
+            {/* Render the SearchResults component and pass the searchResults state */}
+            <div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
+              New Search Results
+            </div>
+            <SearchResults results={newSearchResults} />
+            <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
+              <button onClick={handleSaveAgain} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
+              <Link href="/home">
+                <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
+              </Link>
+            </div>
           </div>
-          
-        )} */}
+        )}
       </div>
     </div>
   );
