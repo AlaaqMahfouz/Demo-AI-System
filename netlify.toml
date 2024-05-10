@@ -1,0 +1,4 @@
+[[redirects]]
+from="/*"
+to = "/client/src/app/page.tsx"
+status = 200
