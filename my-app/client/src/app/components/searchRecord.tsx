@@ -84,7 +84,7 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
       let itemsList;            // Variable to store the list of items for the key
 
       // Check if the array of items for the current key is not empty
-      if (searchRequirements[key] && searchRequirements[key].length > 0) {
+      // if (searchRequirements[key] && searchRequirements[key].length > 0) {
         // Depending on the key, set the heading and itemsList accordingly
         switch (key) {
           case 'addresses':
@@ -92,10 +92,15 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((address: any, index: number) => (
-                  <li key={index}>
-                    {address.city}, {address.state}, {address.country}
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <div>{address.city}, {address.state}, {address.country}</div>
                   </li>
                 ))}
+                <li className='flex m-2'>
+                <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                <div>beirut, beirut, lebanon</div>
+                </li>
               </ul>
             );
             break;
@@ -104,10 +109,17 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((education: any, index: number) => (
-                  <li key={index}>
-                    {education.school} - {education.degree}
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>{education.school}<br></br>{education.degree}<br></br>{education.fieldOfStudy}</div>
                   </li>
                 ))}
+                <li className='flex m-2'>
+                  <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                  <hr className='border-r border-blue-900 h-auto m-1'/>
+                  <div>Lebanese University, Fanar<br></br>Bachelor degree<br></br>Computer Science</div>
+                </li>
               </ul>
             );
             break;
@@ -116,10 +128,21 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((workExp: any, index: number) => (
-                  <li key={index}>
-                    {workExp.position} at {workExp.company}
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>Position: {workExp.position}<br></br>Company: {workExp.company}</div>
                   </li>
                 ))}
+                <li className='flex m-2'>
+                <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                <hr className='border-r border-blue-900 h-auto m-1'/>
+                  <div>Position: Senior Software Engineer<br></br>Company: Murex</div>
+                </li><li className='flex m-2'>
+                <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                <hr className='border-r border-blue-900 h-auto m-1'/>
+                  <div>Position: Senior Frontend Developer<br></br>Company: Foo<br></br></div>
+                </li>
               </ul>
             );
             break;
@@ -128,10 +151,17 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((project: any, index: number) => (
-                  <li key={index}>
-                    {project.projectName} ({project.startDate} - {project.endDate})
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>{project.projectName}<br></br>({project.startDate} - {project.endDate})</div>
                   </li>
                 ))}
+                <li className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>AI-Recruitment-System<br></br>2023 - 2024</div>
+                  </li>
               </ul>
             );
             break;
@@ -140,8 +170,9 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((skill: any, index: number) => (
-                  <li key={index}>
-                    {skill.skillName}
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <div>{skill.skillName}</div>
                   </li>
                 ))}
               </ul>
@@ -152,8 +183,15 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((certification: any, index: number) => (
-                  <li key={index}>{certification.certificationName}</li>
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <div>{certification.certificationName}</div>
+                  </li>
                 ))}
+                <li className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <div>Red cross Lebanon</div>
+                  </li>
               </ul>
             );
             break;
@@ -162,10 +200,17 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
             itemsList = (
               <ul>
                 {searchRequirements[key].map((language: any, index: number) => (
-                  <li key={index}>
-                    {language.languageName} ({language.proficiency})
+                  <li key={index} className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>Language: {language.languageName}<br></br>Proficiency: ({language.proficiency})</div>
                   </li>
                 ))}
+                <li className='flex m-2'>
+                    <svg className='w-1 mr-1' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10a2 2 0 1 0 0 4 2 2 0 1 0 0-4z"/><path fill="currentColor" d="M0 0h24v24H0z"/></svg>
+                    <hr className='border-r border-blue-900 h-auto m-1'/>
+                    <div>Language: Arabic<br></br>Proficiency: Fluent</div>
+                  </li>
               </ul>
             );
             break;
@@ -173,16 +218,17 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
         
         // Push JSX elements for the current key and its items to the 'elements' array
         elements.push(
-          <div key={key}>
+          <div key={key} className='flex m-7'>
             {/* Display the heading for the key */}
-            <p className="sm:text-3xl text-3xl text-blue-900 text-center m-4">
+            <p className="sm:text-2xl text-3xl text-blue-900 m-4">
               {keyHeading}
             </p>
+            <hr className='border-r border-blue-900 h-auto mr-4'/> 
             {/* Display the list of items for the key */}
             {itemsList}
           </div>
         );
-      } 
+      // } 
     }
     // Return the array of JSX elements
     return elements;
@@ -233,14 +279,16 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
     <div>
       <GoHomeHeadband/>
       <div className='m-7 font-mono font-bold'>
-        <div className='text-6xl text-blue-900 text-center m-12'>
-          {title}
+        <div className='flex justify-center'>  {/* Added wrapper and class */}
+          <div className='text-2xl fixed -translate-y-14 justify-center text-gray-200 text-center m-12 z-20 '>  {/* Existing div */}
+            {title}
+          </div>
         </div>
-        <div className="max-w-screen-xl mx-auto">
-          <p className="sm:text-3xl text-3xl text-blue-900 text-center m-4">
-            Search Requirements:
+        <div className="max-w-screen-xl mx-auto mt-20">
+          <p className="sm:text-5xl text-3xl text-blue-900 text-center m-4">
+            Search Requirements
           </p>
-          <div className='text-blue-900 p-4 text-center'>
+          <div className='text-blue-900 p-4 flex flex-wrap justify-around'>
             {/*JSON.stringify(searchRequirements)*/}
             {renderJSON(searchRequirements)}
           </div>

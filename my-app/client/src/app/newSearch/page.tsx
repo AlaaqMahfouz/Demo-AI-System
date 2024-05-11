@@ -69,7 +69,7 @@ const SearchForm: React.FC = () => {
     <div>
       <GoHomeHeadband/>
       <div className='m-7 font-mono font-bold'>
-        <div className='sm:text-6xl text-5xl text-blue-900 text-center m-12'>
+        <div className='sm:text-6xl mt-24 text-5xl text-blue-900 text-center m-12'>
           New Search
         </div>
         <form onSubmit={handleSearch}>
