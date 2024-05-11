@@ -13,7 +13,7 @@ interface SearchRecord {
 const SearchRecordList: React.FC = () => {
 
   const [searches, setSearches] = useState<SearchRecord[]>([]);
-
+  
   useEffect(() => {
     const getSearches = async () => {
       try {
