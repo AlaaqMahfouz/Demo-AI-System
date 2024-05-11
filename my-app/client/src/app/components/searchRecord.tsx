@@ -353,7 +353,7 @@ const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
         )}
         <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
         <div className='flex justify-end mb-20'>
-          <Link href="/home">
+          <Link legacyBehavior href="/home">
             <a>
               <button 
                 onClick={handleCancel.handleClick}
