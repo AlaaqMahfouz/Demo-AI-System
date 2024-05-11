@@ -5,6 +5,7 @@
     "fs-extra": "^11.2.0",
     "groupdocs-parser-cloud": "^23.10.0",
     "next": "^14.2.2",
+    "node": "^20.13.1",
     "nvm": "^0.0.4",
     "pdf-image-extractor": "^2.0.8",
     "pdf-img-convert": "^1.2.1",
