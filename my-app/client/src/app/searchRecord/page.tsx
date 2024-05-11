@@ -1,11 +1,14 @@
 'use client'
 
+
+
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 interface SearchRecord {
   searchID: number,
@@ -13,6 +16,9 @@ interface SearchRecord {
 }
 
 const SearchFormAgain: React.FC = () => {
+
+ 
+
 
   //extracting searchID and search title from the url
   const searchParams = useSearchParams()!;
@@ -300,5 +306,5 @@ const SearchFormAgain: React.FC = () => {
     </div>
   );
 };
-
 export default SearchFormAgain;
+
