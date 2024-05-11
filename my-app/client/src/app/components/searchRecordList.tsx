@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { stringify } from 'querystring';
 import Link from 'next/link';
@@ -31,10 +31,12 @@ const SearchRecordList: React.FC = () => {
 
   
     return (
+          <Suspense>
       <div className="container mx-auto">
         <div className="text-3xl text-center font-semibold mb-7">Searches</div>
         <ul>
           {searches.length > 0 ? (searches.map((search) => (
+
             <li key={search.searchID} className="mb-2">
               <Link href={{
                 pathname: '/searchRecord',
@@ -59,6 +61,7 @@ const SearchRecordList: React.FC = () => {
           )}
         </ul>
       </div>
+          </Suspense>
     );
   };
   

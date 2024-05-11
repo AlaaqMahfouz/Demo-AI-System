@@ -76,7 +76,7 @@ const CandidateCard: FC<CandidateProps> =  ({ isOpen, onClose, data, resumeInfo,
             <div className='bg-gray-300 rounded-3xl text-center'>
               {Files &&(
                 <button key={Files.name} onClick={() => handleDownloadFile(Files.resumeID)} className='sm:flex-row flex items-center'>
-                  <div className='text-blue-800 mr-2'>CLICK HERE</div><div> to download {Files.name}'s documents</div>
+                  <div className='text-blue-800 mr-2'>CLICK HERE</div><div> to download {`${Files.name}'s`} documents</div>
                 </button>
               )}
             </div>

@@ -2,7 +2,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef } from 'react';
 import axios from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
@@ -62,11 +62,19 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
     }
   }
 
+  // solve prerender issues
+  const hasMounted = useRef(false);
+
   useEffect(() => {
-    console.log('search id: ', searchID);
-    
-    getSearchRequirements();
-    getSearchResults();
+    if(!hasMounted.current)
+      {
+
+        console.log('search id: ', searchID);
+        
+        getSearchRequirements();
+        getSearchResults();
+        hasMounted.current=true;
+      }
   }, [])
 
   useEffect(() => {
