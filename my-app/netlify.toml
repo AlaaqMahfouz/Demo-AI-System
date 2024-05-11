@@ -1,0 +1,14 @@
+[build]
+  publish = "./"
+
+[[builds]]
+  name = "client"
+  command = "npm run build"
+  directory = "client"
+  publish = "client/build"
+
+[[builds]]
+  name = "server"
+  command = "npm run build"
+  directory = "server"
+  publish = "server/build"
