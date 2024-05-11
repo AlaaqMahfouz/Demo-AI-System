@@ -60,8 +60,7 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
       let req:NextRequest;
       try{
-        // finalText   = await docxToHtml();
-        finalText=(await (getServerSideProps())).props.text;
+        finalText   = await docxToHtml();
 
         let textDone:string;
 
@@ -138,12 +137,12 @@ export default async function ExtractText(file:any,path:string) : Promise<string
 
 
 
-//  async function docxToHtml(): Promise<string> { // handle doc files with mammoth
-//     const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
-//     const value = RawTextPromise.value;
-//     console.log("text : " + value);
-//     return value;
-//   }
+ async function docxToHtml() { // handle doc files with mammoth
+    const RawTextPromise = await mammoth.extractRawText({ path:completeFilePath});
+    const value = RawTextPromise.value;
+    console.log("text : " + value);
+    return value;
+  }
 
   // const docxToHtml = async () => {
   //   // Your existing code here
@@ -156,20 +155,7 @@ export default async function ExtractText(file:any,path:string) : Promise<string
   //   return handleDocxToHtml();
   // };
 
-  export const getServerSideProps = async () => {
-    // Your existing code here
-    async function handleDocxToHtml() {
-      const RawTextPromise = await mammoth.extractRawText({ path: completeFilePath });
-      const value = RawTextPromise.value;
-      console.log("text : " + value);
-      return {
-        props: {
-          text: value,
-        },
-      };
-    }
-    return handleDocxToHtml();
-  };
+ 
   
   
   
