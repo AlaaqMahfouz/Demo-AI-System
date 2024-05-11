@@ -9,10 +9,10 @@ import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import SearchFormAgain from '../components/searchRecord';
+import SearchRecord from '../components/searchRecord';
 
 
-const SearchRecord: React.FC = () => {
+const SearchRecordPage: React.FC = () => {
   //extracting searchID and search title from the url
   const searchParams = useSearchParams()!;
   const [searchID, setSearchID] = useState<number>(parseInt(searchParams.get('searchID') || '0'));
@@ -22,9 +22,9 @@ const SearchRecord: React.FC = () => {
   return (
     <div>
       {/* Pass the searchID and title props to the SearchFormAgain component */}
-      <SearchFormAgain searchID={searchID} title={title} />
+      <SearchRecord searchID={searchID} title={title} />
     </div>
   );
 };
-export default SearchRecord;
+export default SearchRecordPage;
 

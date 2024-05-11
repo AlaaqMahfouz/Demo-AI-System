@@ -1,7 +1,3 @@
-'use client'
-
-
-
 import React, { useState, useEffect ,useRef } from 'react';
 import axios from 'axios';
 import SearchResults from '../components/searchResults';
@@ -15,7 +11,7 @@ interface SearchRecordProps{
     title: string
 }
 
-const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
+const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
   
   //to display search details 
   const [searchRequirements, setSearchRequirements] = useState<any>();
@@ -340,20 +336,42 @@ const SearchFormAgain: React.FC<SearchRecordProps> = ({searchID, title}) => {
         {newSearchResults.length > 0 && !savedSearch && (
           <div>
             {/* Render the SearchResults component and pass the searchResults state */}
-            <div className="sm:text-6xl text-5xl text-blue-900 text-center m-12">
-              New Search Results
-            </div>
-            <SearchResults results={newSearchResults} />
-            <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
-              <button onClick={handleSaveAgain} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
-              <Link href="/home">
-                <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
-              </Link>
+            <div className="flex flex-col items-center justify-center mb-8">
+              <button 
+                onClick={handleSaveAgain}
+                className="flex m-4 justify-center text-lg bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-gray-500 font-extrabold h-min w-15 py-3 px-4 rounded-full"
+              >
+                Save
+                <div className="p-1 ps-3 inset-y-0 start-0 flex items-center pointer-events-none">
+                  <svg className="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
+                </div>
+              </button>
             </div>
           </div>
         )}
+        <hr className="max-w mx-8 mt-4 border-blue-950 border-2 m-12"/>
+        <div className='flex justify-end mb-20'>
+          <Link href="/home">
+            <a>
+              <button 
+                onClick={handleCancel.handleClick}
+                className="flex m-4 justify-center text-lg bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-gray-500 font-extrabold h-min w-15 py-3 px-4 rounded-full"
+              >
+                Cancel
+                <div className="p-1 ps-3 inset-y-0 start-0 flex items-center pointer-events-none">
+                  <svg className="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
+                </div>
+              </button>
+            </a>
+          </Link>
+        </div>
       </div>
     </div>
   );
-};
-export default SearchFormAgain;
+}
+
+export default SearchRecord;
