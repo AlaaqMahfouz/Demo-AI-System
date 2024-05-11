@@ -1,16 +1,12 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import SearchResults from '../components/searchResults';
 import GoHomeHeadband from '../components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-interface SearchRecord {
-  searchID: number,
-  title: string;
-}
 
 const SearchFormAgain: React.FC = () => {
 
@@ -217,6 +213,9 @@ const SearchFormAgain: React.FC = () => {
 
       console.log('Search saved successfully:', response.data);
       setSavedSearch(true); // Set savedSearch to true after saving
+
+      // Combine the new search results with the previous ones
+      setPreviousSearchResults(prevResults => [...prevResults, ...newSearchResults]);
     } catch (error) {
       console.error('Error saving search:', error);
     }
