@@ -29,6 +29,7 @@
     "node": "^21.7.1",
     "node.js": "^0.0.1-security",
     "nodemon": "^3.1.0",
+    "parser.js": "^1.0.0",
     "pdf-parse": "^1.1.1",
     "pdf-text-reader": "^4.0.1",
     "pdf.js": "^0.1.0",
