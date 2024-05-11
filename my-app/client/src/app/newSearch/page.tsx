@@ -127,7 +127,9 @@ const SearchForm: React.FC = () => {
             </div>
             <SearchResults results={searchResults} />
             <div className='flex flex-row-reverse justify-center space-x-4 space-x-reverse mt-7'>
-              <button onClick={handleSaveSearch} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
+              <Link href={"/home"}>
+                <button onClick={handleSaveSearch} className=' m-3 text-lg bg-blue-800 hover:bg-blue-900 text-white shadow-lg shadow-gray-500 font-extrabold h-14 w-44 py-3 px-4 rounded-full'>Save Search</button>
+              </Link>
               <Link href="/home">
                 <button className="w-44 p-3 m-3 h-14 rounded-full bg-gray-500 text-white font-extrabold hover:bg-gray-700 focus:outline-none"> Cancel </button>
               </Link>
