@@ -13,6 +13,7 @@ export async function getResumeInfo(resumeID: number): Promise<string> {
         //error handeling
         console.error('Error getting searches: ',error);
         return '';
+        
       } else {
         return data.resumeInfo;
       }
