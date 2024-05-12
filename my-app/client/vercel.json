@@ -4,6 +4,13 @@
         "src": "src",
         "use": "@vercel/static-build",
         "config": {
+            "distDir":"src",
+            "routes":[
+                {
+                    "src":"/",
+                    "dest":"app/page.tsx"
+                }
+            ],
           "typescript": {
             "skipLibCheck": true
           }
