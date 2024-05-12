@@ -18,11 +18,29 @@
     "client:start": "cd client && npm run start",
     "pages:build": "cd pages && npm run build",
     "pages:start": "cd pages && npm run start",
-    "build": "npm run client:build && npm run pages:build",
+    "build": "npm run pages:build && npm run client:build",
     "start": "npm run client:start && npm run pages:start"
   
   },
   "main":"pages/index.ts",
+
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": "client/build"
+      }
+    },
+    {
+      "src": "pages/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "pages/build"
+      }
+    }
+  ]
+,
 
   "devDependencies": {
     "@types/fs-extra": "^11.0.4"

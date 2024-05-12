@@ -10,10 +10,13 @@
     "build": "tsc",
     "vercel-build": "tsc"
   },
+  "builds":{
+    "use":"@vercel/static-build"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google/generative-ai": "^0.3.1",
+    "@google/generative-ai": "^0.3.1", 
     "@langchain/google-genai": "^0.0.10",
     "@supabase/supabase-js": "^2.41.1",
     "cors": "^2.8.5",
