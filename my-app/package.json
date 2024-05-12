@@ -4,7 +4,6 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "fs-extra": "^11.2.0",
     "groupdocs-parser-cloud": "^23.10.0",
-    "next": "^14.2.3",
     "node": "^20.13.1",
     "nvm": "^0.0.4",
     "pdf-image-extractor": "^2.0.8",
@@ -39,9 +38,7 @@
     }
   ],
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/react": "18.3.2",
-    "typescript": "5.4.5"
+    "@types/fs-extra": "^11.0.4"
   },
   "engines": {
     "node": "^20.10.0"
