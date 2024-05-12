@@ -39,6 +39,7 @@
   ],
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
+    "@types/uuid": "^9.0.8",
     "typescript": "^5.4.5"
   },
   "engines": {
