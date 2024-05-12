@@ -10,9 +10,7 @@
     "build": "tsc",
     "vercel-build": "tsc"
   },
-  "builds":{
-    "use":"@vercel/static-build"
-  },
+ 
   "author": "",
   "license": "ISC",
   "dependencies": {
