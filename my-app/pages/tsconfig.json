@@ -8,6 +8,7 @@
     "jsx": "react"
   },
   "include": [
+    "./api/*.ts",
     "index.ts" // Adjust the path based on your project structure
   ],
   "exclude": [

@@ -356,6 +356,8 @@ export function isEmptyString(str: string): boolean {
   // Use a regular expression to match strings containing only whitespace characters
   return /^\s*$/.test(str);
 }
+
+export default app;
               
 app.listen(4000);
 console.log("running on port 4000");
