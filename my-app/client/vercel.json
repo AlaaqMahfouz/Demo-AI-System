@@ -2,6 +2,7 @@
     "builds": [
       {
         "src": "src",
+        "use":"@vercel/next",
         "config": {
             "distDir":"src",
             "routes":[
