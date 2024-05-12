@@ -1,6 +1,8 @@
 # PDF Text Reader
 
-Dead simple PDF text reader.
+Dead simple PDF text reader for Node.js. Uses Mozilla's [`pdfjs-dist`](https://www.npmjs.com/package/pdfjs-dist) package.
+
+Requires ESM and Node.js v22 or greater. (These are requirements from Mozilla's `pdf-dist` package itself.)
 
 # Install
 
@@ -42,8 +44,6 @@ npm install pdf-text-reader
 See [the types](https://github.com/electrovir/pdf-text-reader/tree/master/src/read-pdf.ts) for detailed argument and return value types.
 
 # Details
-
-This uses Mozilla's [`pdf.js`](https://github.com/mozilla/pdf.js/) package through its [`pdfjs-dist`](https://www.npmjs.com/package/pdfjs-dist) distribution on npm.
 
 This package simply reads the output of `pdfjs.getDocument` and sorts it into lines based on text position in the document. It also inserts spaces for text on the same line that is far apart horizontally and new lines in between lines that are far apart vertically.
 

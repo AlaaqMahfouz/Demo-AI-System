@@ -8,6 +8,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 
+
 interface FileUploadProps {
   onClose: (result : string) => void;
 }
@@ -56,10 +57,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
           formData.append('otherFiles', otherFiles[i]);
         }
       }
-
+      console.log(process.env.BACK_END_URL);
       try { 
         const response = await axios.post<any>( // Update response type based on server response
-          'http://localhost:4001/upload',
+        "https://ai-back-end.netlify.app/upload",
           formData,
           {
             headers: {

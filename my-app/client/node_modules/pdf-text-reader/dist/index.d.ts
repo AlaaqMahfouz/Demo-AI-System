@@ -1,1 +1,1 @@
-export * from './read-pdf';
+export * from './read-pdf.js';
