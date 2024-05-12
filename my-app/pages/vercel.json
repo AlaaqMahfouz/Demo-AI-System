@@ -1,6 +1,8 @@
 {
     "rewrites":[{"source":"/(.*)","destination":"/api"}],
-    "build":{
+    "builds":[
+        {
         "use":"@vercel/static-build"
       }
+    ]
 }
