@@ -26,7 +26,7 @@ const SearchRecordList: React.FC = () => {
   useEffect(() => {
     const getSearches = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/get-searches');
+        const response = await axios.get('http://localhost:4001/get-searches');
         
         const searchesList: SearchRecordDetails[] =  await response.data;
         setSearches(searchesList);

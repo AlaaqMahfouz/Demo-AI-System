@@ -59,7 +59,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onClose }) => {
 
       try { 
         const response = await axios.post<any>( // Update response type based on server response
-          'http://localhost:4000/upload',
+          'http://localhost:4001/upload',
           formData,
           {
             headers: {

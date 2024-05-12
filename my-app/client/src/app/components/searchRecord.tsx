@@ -29,7 +29,7 @@ const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
   const getSearchRequirements = async () => {
     try {
       // Make HTTP GET request to retrieve the search requirements from the database
-      const response = await axios.get('http://localhost:4000/get-search-requirement', {params: {
+      const response = await axios.get('http://localhost:4001/get-search-requirement', {params: {
         searchID: searchID
       }});
 
@@ -46,7 +46,7 @@ const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
   const getSearchResults = async () => {
     try {
       // Make HTTP GET request to retrieve the saved search results from the database
-      const response = await axios.get('http://localhost:4000/get-search-result', {params: {
+      const response = await axios.get('http://localhost:4001/get-search-result', {params: {
         searchID: searchID
       }});
 
@@ -241,7 +241,7 @@ const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
 
   const handleSearchAgain = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/search-again', {
+      const response = await axios.post('http://localhost:4001/search-again', {
         searchID,
         limit
       });
@@ -258,7 +258,7 @@ const SearchRecord: React.FC<SearchRecordProps> = ({searchID, title}) => {
   const handleSaveAgain = async () => {
     try {
       // Make HTTP POST request to save the search in the database
-      const response = await axios.post('http://localhost:4000/save-search-again', {
+      const response = await axios.post('http://localhost:4001/save-search-again', {
         searchID,
         newResults
       });

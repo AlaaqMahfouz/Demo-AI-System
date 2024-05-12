@@ -26,14 +26,14 @@ const SearchForm: React.FC = () => {
 
       console.log("search text :" +searchText)
     try {
-      await axios.post('http://localhost:4000/convert-text', { searchText }).then(async (res:AxiosResponse)=>{
+      await axios.post('http://localhost:4001/convert-text', { searchText }).then(async (res:AxiosResponse)=>{
 
         // setStructuredSearchString(res.data);
 
         structuredSearchString=res.data;
 
         console.log("structured text before send it to new search :" + structuredSearchString);
-         await axios.post('http://localhost:4000/new-search', {
+         await axios.post('http://localhost:4001/new-search', {
           structuredSearchString,
           limit
         }).then((Res:AxiosResponse)=>{
@@ -52,7 +52,7 @@ const SearchForm: React.FC = () => {
     try {
       console.log("structured string before sending it to save search :" + structuredSearchString)
       // Make HTTP POST request to save the search in the database
-      const response = await axios.post('http://localhost:4000/save-search', {
+      const response = await axios.post('http://localhost:4001/save-search', {
         searchTitle,
         structuredSearchString, 
         searchResults // Pass the search results to be saved

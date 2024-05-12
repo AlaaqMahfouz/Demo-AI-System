@@ -25,7 +25,7 @@ const SearchResults:FC<SearchResultProps> = ({ results }) => {
     setResults(result);
     console.log("selected files 2 :" + JSON.stringify(result));
     // Send candidateID to backend for parsing
-    const response = await fetch('http://localhost:4000/parsing-JSON-To-HTML', {
+    const response = await fetch('http://localhost:4001/parsing-JSON-To-HTML', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const SearchResults:FC<SearchResultProps> = ({ results }) => {
   }
   
   // const fetchParsedResumeHTML=(async (ID:any)=>{
-    //    const response = await fetch('http://localhost:4000/parsing-JSON-To-HTML', {
+    //    const response = await fetch('http://localhost:4001/parsing-JSON-To-HTML', {
   //     method: 'POST',
   //     headers: {
     //       'Content-Type': 'application/json',
