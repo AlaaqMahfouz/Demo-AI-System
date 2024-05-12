@@ -1,9 +1,13 @@
 {
   "dependencies": {
     "@angular/core": "^17.3.3",
+    "@google/generative-ai": "^0.11.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "express": "^4.19.2",
     "fs-extra": "^11.2.0",
     "groupdocs-parser-cloud": "^23.10.0",
+    "mammoth": "^1.7.2",
+    "next": "^14.2.3",
     "node": "^20.13.1",
     "nvm": "^0.0.4",
     "pdf-image-extractor": "^2.0.8",

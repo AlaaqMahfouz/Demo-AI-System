@@ -10,11 +10,10 @@
     "build": "tsc",
     "vercel-build": "tsc"
   },
- 
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google/generative-ai": "^0.3.1", 
+    "@google/generative-ai": "^0.3.1",
     "@langchain/google-genai": "^0.0.10",
     "@supabase/supabase-js": "^2.41.1",
     "cors": "^2.8.5",
@@ -22,7 +21,7 @@
     "googleapi": "^1.0.2",
     "googleapis": "^134.0.0",
     "langchain": "^0.1.30",
-    "mammoth": "^1.7.1",
+    "mammoth": "^1.7.2",
     "multer": "^1.4.5-lts.1",
     "next": "^14.2.3",
     "pdf-img-convert": "^1.2.1",
@@ -30,7 +29,7 @@
     "react-dom": "^18.3.1",
     "tesseract.js": "^5.0.5",
     "typescript": "^5.4.5"
-    },
+  },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/fs-extra": "^11.0.4",
