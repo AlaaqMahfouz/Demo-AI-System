@@ -8,7 +8,7 @@
     "start": "node index",
     "dev": "nodemon --exec npx ts-node index.ts",
     "build": "tsc",
-    "vercel-build": "tsc"
+    "vercel-build": "echo running server"
   },
   "author": "",
   "license": "ISC",
