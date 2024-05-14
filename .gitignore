@@ -6,7 +6,6 @@ package-lock.json
 yarn.lock
 dist/
 build/
-*.js
 logs/
 *.log
 .vscode/
