@@ -1,7 +1,7 @@
 {
     "builds": [
       {
-        "src":"pages/",
+        "src":".",
         "use":"@vercel/next",
         "config": {
           "typescript": {
