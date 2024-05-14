@@ -1,16 +1,8 @@
 {
     "builds": [
       {
-        "src": "src",
         "use":"@vercel/next",
         "config": {
-            "distDir":"src",
-            "routes":[
-                {
-                    "src":"/",
-                    "dest":"app/page.tsx"
-                }
-            ],
           "typescript": {
             "skipLibCheck": true
           }
