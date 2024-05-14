@@ -1,7 +1,7 @@
 import React, { useState, useEffect ,useRef } from 'react';
 import axios from 'axios';
-import SearchResults from '../components/searchResults';
-import GoHomeHeadband from '../components/goHomeHeadband';
+import SearchResults from './searchResults';
+import GoHomeHeadband from './goHomeHeadband';
 import { redirect} from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';

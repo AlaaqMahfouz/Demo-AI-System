@@ -7,8 +7,8 @@ import Welcome from "../components/welcome";
 import FileUpload from "../components/file-upload";
 import Link from "next/link";
 import { createContext } from 'react';
-import Success from "../toast-Components/success-toast";
-import Fail from "../toast-Components/failed-toast";
+import Success from "../../../toast-Components/success-toast";
+import Fail from "../../../toast-Components/failed-toast";
 
 // import { createClient } from '@supabase/supabase-js'; // Import Supabase client
 

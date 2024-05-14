@@ -4,12 +4,12 @@
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import axios from 'axios';
-import SearchResults from '../components/searchResults';
-import GoHomeHeadband from '../components/goHomeHeadband';
+import SearchResults from '../src/app/components/searchResults';
+import GoHomeHeadband from '../src/app/components/goHomeHeadband';
 import { redirect, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import SearchRecord from '../components/searchRecord';
+import SearchRecord from '../src/app/components/searchRecord';
 import { NextPage } from 'next';
 
 import { useRouter } from 'next/router';
