@@ -1,5 +1,5 @@
-// next.config.js
-module.exports = {
-  target: 'serverless',
-}
- 
+export default {
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+};
